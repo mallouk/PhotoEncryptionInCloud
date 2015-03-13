@@ -52,8 +52,6 @@ public class GestureActivity extends Activity {
         gestureButtons[15] = (ImageView)findViewById(R.id.imageView16);
 
         this.runButtonListeners();
-        //test
-
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
