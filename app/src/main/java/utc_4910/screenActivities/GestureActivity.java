@@ -50,7 +50,7 @@ public class GestureActivity extends Activity {
         gestureButtons[13] = (ImageView)findViewById(R.id.imageView14);
         gestureButtons[14] = (ImageView)findViewById(R.id.imageView15);
         gestureButtons[15] = (ImageView)findViewById(R.id.imageView16);
-
+        //comment
         this.runButtonListeners();
     }
 
