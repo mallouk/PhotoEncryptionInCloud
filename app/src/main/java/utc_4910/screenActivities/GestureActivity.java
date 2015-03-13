@@ -2,7 +2,6 @@ package utc_4910.screenActivities;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.ClipData;
 import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -10,15 +9,13 @@ import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
-import android.support.v4.view.GestureDetectorCompat;
 import android.util.Log;
-import android.view.DragEvent;
-import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+
+import java.util.ArrayList;
 
 import utc_4910.photoencryptionincloud.R;
 
@@ -29,10 +26,16 @@ public class GestureActivity extends Activity {
 
     private ImageView[] gestureButtons = new ImageView[16];
     private GridLayout gridLayout;
+    private PasswordButtonListener passwordButtonListener;
+    private ArrayList<String> password = new ArrayList<String>();
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
         setContentView(R.layout.gesture_activity);
+        passwordButtonListener = new PasswordButtonListener(this);
+        //setContentView(passwordButtonListener);
+
         gridLayout = (GridLayout)findViewById(R.id.gestureGrid);
         gestureButtons[0] = (ImageView)findViewById(R.id.imageView1);
         gestureButtons[1] = (ImageView)findViewById(R.id.imageView2);
@@ -56,88 +59,81 @@ public class GestureActivity extends Activity {
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public void runButtonListeners() {
-        for (int x = 0; x < gridLayout.getChildCount(); x++) {
-            gridLayout.getChildAt(x).setOnClickListener(new PasswordButtonListener(this,x));
-        }
+        //for (int x = 0; x < gridLayout.getChildCount(); x++) {
+            //passwordButtonListener.setIndex(x);
+            //gridLayout.getChildAt(x).setOnTouchListener(new PasswordButtonListener(this, x));
+        gridLayout.setOnTouchListener(passwordButtonListener);
+        //}
     }
-    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public class PasswordButtonListener extends View implements  Button.OnClickListener, Button.OnLongClickListener,
-            View.OnDragListener, View.OnTouchListener, GestureDetector.OnGestureListener{
 
-        private GestureDetectorCompat gestureDetectorCompat;
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB)
+    public class PasswordButtonListener extends View implements View.OnTouchListener{
+
         private int index;
+        private boolean passSet = true;
+
+        public PasswordButtonListener(Context context){
+            super(context);
+        }
 
         public PasswordButtonListener(Context context, int index) {
             super(context);
             this.index = index;
-            gestureDetectorCompat = new GestureDetectorCompat(GestureActivity.this, this);
         }
 
-        @Override
-        public void onClick(View v) {
-            Log.d("TAG-CLICK", gridLayout.getChildAt(index) + " " + index);
-            gestureButtons[index].setImageResource(R.drawable.gesture_pressed);
+        public void setIndex(int index){
+            this.index = index;
         }
 
-        @Override
-        public boolean onDrag(View v, DragEvent event) {
-            if (event.getAction() == DragEvent.ACTION_DRAG_LOCATION){
-                Log.d("TAG-DRAG", gridLayout.getChildAt(index) + " " + index);
-                gestureButtons[index].setImageResource(R.drawable.gesture_pressed);
-            }
-            return true;
-        }
-
-        @Override
-        public boolean onLongClick(View v) {
-            Log.d("TAG-LONG", gridLayout.getChildAt(index) + " " + index);
-            gestureButtons[index].setImageResource(R.drawable.gesture_pressed);
-            return true;
-        }
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
-            if (event.getAction() == MotionEvent.ACTION_DOWN) {
-                ClipData data = ClipData.newPlainText("", "");
-                View.DragShadowBuilder shadowBuilder = new View.DragShadowBuilder(v);
-                v.startDrag(data, shadowBuilder, v, 0);
-                v.setVisibility(View.INVISIBLE);
-                return true;
-            } else {
+            if (passSet) {
+                if (event.getAction() == MotionEvent.ACTION_DOWN) {
+                    float x = event.getX();
+                    float y = event.getY();
+                    for (int i = 0; i < gridLayout.getChildCount(); i++) {
+                        View view = gridLayout.getChildAt(i);
+                        Rect rectView = new Rect();
+                        view.getHitRect(rectView);
+                        if (rectView.contains((int) x, (int) y) && gridLayout.getChildAt(i).isShown()) {
+                            Log.d("Index: ", i + "");
+                            gestureButtons[i].setImageResource(R.drawable.gesture_pressed);
+                            password.add(i + "");
+                        }
+                    }
+                    return true;
+                } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
+                    event.getDeviceId();
+                    float x = event.getX();
+                    float y = event.getY();
+                    for (int i = 0; i < gridLayout.getChildCount(); i++) {
+                        View view = gridLayout.getChildAt(i);
+                        Rect rectView = new Rect();
+                        view.getHitRect(rectView);
+                        if (rectView.contains((int) x, (int) y) && gridLayout.getChildAt(i).isShown()
+                                && !password.contains(i + "")) {
+                            Log.d("Index: ", i + "");
+                            gestureButtons[i].setImageResource(R.drawable.gesture_pressed);
+                            password.add(i + "");
+                        }
+                    }
+                    int[] posXY = {(int) x, (int) y};
+                    gridLayout.getLocationOnScreen(posXY);
+                    //Log.d("DRAW", "MOVING " + index + "   " + x + " " + y);
+
+                    return true;
+                } else if (event.getAction() == MotionEvent.ACTION_UP) {
+                    passSet = false;
+                    Log.d("Done!", password + "");
+                    Log.d("Action", "UP");
+                    return true;
+                } else {
+                    return false;
+                }
+            }else{
                 return false;
             }
-        }
-
-        @Override
-        public boolean onDown(MotionEvent e) {
-            return false;
-        }
-
-        @Override
-        public void onShowPress(MotionEvent e) {
-
-        }
-
-        @Override
-        public boolean onSingleTapUp(MotionEvent e) {
-            Log.d("Tap", "Single Tap!");
-            return true;
-        }
-
-        @Override
-        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-            Log.d("SCROLL", "Scroll!");
-            return true;
-        }
-
-        @Override
-        public void onLongPress(MotionEvent e) {
-
-        }
-
-        @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
-            return false;
         }
 
         public void onDraw(Canvas canvas){
