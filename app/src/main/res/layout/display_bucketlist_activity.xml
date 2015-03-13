@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:paddingRight="15dp"
+    android:paddingLeft="15dp"
+    >
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:text="BucketName objects listed below..."
+        android:id="@+id/bucketView"
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/deleteItemsButton" />
+
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/spilledBucketList"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_below="@+id/bucketView"
+        android:background="#000000"
+        android:drawSelectorOnTop="false">
+    </ListView>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Delete"
+        android:id="@+id/deleteItemsButton"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/downItemsButton" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Download"
+        android:id="@+id/downItemsButton"
+        android:layout_alignParentTop="true"
+        android:layout_alignRight="@+id/spilledBucketList"
+        android:layout_alignEnd="@+id/spilledBucketList" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Clear"
+        android:id="@+id/unselectAllButton"
+        android:layout_alignParentTop="true"
+        android:layout_toLeftOf="@+id/deleteItemsButton"
+        android:layout_toStartOf="@+id/deleteItemsButton" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="This bucket is empty!"
+        android:id="@+id/emptyView"
+        android:layout_alignTop="@+id/spilledBucketList"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="134dp"
+        android:textSize="20dp"
+        android:textColor="#808080"/>
+
+
+</RelativeLayout>

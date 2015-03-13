@@ -1,0 +1,29 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 21
+    buildToolsVersion "21.1.2"
+
+    defaultConfig {
+        applicationId "utc_4910.photoencryptionincloud"
+        minSdkVersion 8
+        targetSdkVersion 21
+        versionCode 1
+        versionName "1.0"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+}
+
+dependencies {
+    compile fileTree(dir: 'libs', include: ['*.jar'])
+    compile 'com.android.support:appcompat-v7:21.0.3'
+    compile files('libs/aws-android-sdk-2.1.8-core.debug.jar')
+    compile files('libs/aws-android-sdk-2.1.8-s3.debug.jar')
+    compile files('aws-android-sdk-2.1.8-ses.debug.jar')
+    compile files('aws-android-sdk-2.1.8-sns.debug.jar')
+}
