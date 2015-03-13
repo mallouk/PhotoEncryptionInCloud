@@ -34,6 +34,7 @@ public class GestureActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gesture_activity);
         //added comment
+        //test
         gridLayout = (GridLayout)findViewById(R.id.gestureGrid);
         gestureButtons[0] = (ImageView)findViewById(R.id.imageView1);
         gestureButtons[1] = (ImageView)findViewById(R.id.imageView2);
