@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent" android:layout_height="match_parent"
-    android:id="@+id/rel">
+    android:id="@+id/relativeLayout"
+    android:background="#000000">
 
 
     <GridLayout
@@ -22,7 +23,7 @@
             android:layout_height="45dp"
             android:id="@+id/imageView1"
             android:layout_marginTop="20dp"
-            android:src="@drawable/gesture_not_pressed"
+            android:src="@drawable/gesture_not_pressed2"
             android:layout_marginLeft="20dp"
             android:layout_row="0"
             android:layout_column="0"/>
@@ -32,7 +33,7 @@
             android:layout_height="45dp"
             android:id="@+id/imageView2"
             android:layout_marginTop="20dp"
-            android:src="@drawable/gesture_not_pressed"
+            android:src="@drawable/gesture_not_pressed2"
             android:layout_row="0"
             android:layout_column="2" />
 
@@ -41,7 +42,7 @@
             android:layout_height="45dp"
             android:id="@+id/imageView3"
             android:layout_marginTop="20dp"
-            android:src="@drawable/gesture_not_pressed"
+            android:src="@drawable/gesture_not_pressed2"
             android:layout_row="0"
             android:layout_column="4" />
 
@@ -50,7 +51,7 @@
             android:layout_height="45dp"
             android:id="@+id/imageView4"
             android:layout_marginTop="20dp"
-            android:src="@drawable/gesture_not_pressed"
+            android:src="@drawable/gesture_not_pressed2"
             android:layout_row="0"
             android:layout_column="6" />
 
@@ -79,7 +80,7 @@
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:id="@+id/imageView5"
-        android:src="@drawable/gesture_not_pressed"
+        android:src="@drawable/gesture_not_pressed2"
         android:layout_marginLeft="20dp"
         android:layout_row="2"
         android:layout_column="0"/>
@@ -89,7 +90,7 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:id="@+id/imageView6"
-            android:src="@drawable/gesture_not_pressed"
+            android:src="@drawable/gesture_not_pressed2"
             android:layout_row="2"
             android:layout_column="2"/>
 
@@ -97,7 +98,7 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:id="@+id/imageView7"
-            android:src="@drawable/gesture_not_pressed"
+            android:src="@drawable/gesture_not_pressed2"
             android:layout_row="2"
             android:layout_column="4"/>
 
@@ -105,7 +106,7 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:id="@+id/imageView8"
-            android:src="@drawable/gesture_not_pressed"
+            android:src="@drawable/gesture_not_pressed2"
             android:layout_row="2"
             android:layout_column="6"/>
 
@@ -123,7 +124,7 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:id="@+id/imageView9"
-            android:src="@drawable/gesture_not_pressed"
+            android:src="@drawable/gesture_not_pressed2"
             android:layout_marginLeft="20dp"
             android:layout_row="4"
             android:layout_column="0"/>
@@ -133,7 +134,7 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:id="@+id/imageView10"
-            android:src="@drawable/gesture_not_pressed"
+            android:src="@drawable/gesture_not_pressed2"
             android:layout_row="4"
             android:layout_column="2"/>
 
@@ -141,7 +142,7 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:id="@+id/imageView11"
-            android:src="@drawable/gesture_not_pressed"
+            android:src="@drawable/gesture_not_pressed2"
             android:layout_row="4"
             android:layout_column="4"/>
 
@@ -149,7 +150,7 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:id="@+id/imageView12"
-            android:src="@drawable/gesture_not_pressed"
+            android:src="@drawable/gesture_not_pressed2"
             android:layout_row="4"
             android:layout_column="6"/>
 
@@ -166,7 +167,7 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:id="@+id/imageView13"
-            android:src="@drawable/gesture_not_pressed"
+            android:src="@drawable/gesture_not_pressed2"
             android:layout_marginLeft="20dp"
             android:layout_row="6"
             android:layout_column="0"/>
@@ -177,7 +178,7 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:id="@+id/imageView14"
-            android:src="@drawable/gesture_not_pressed"
+            android:src="@drawable/gesture_not_pressed2"
             android:layout_row="6"
             android:layout_column="2"/>
 
@@ -185,7 +186,7 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:id="@+id/imageView15"
-            android:src="@drawable/gesture_not_pressed"
+            android:src="@drawable/gesture_not_pressed2"
             android:layout_row="6"
             android:layout_column="4"/>
 
@@ -193,7 +194,7 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:id="@+id/imageView16"
-            android:src="@drawable/gesture_not_pressed"
+            android:src="@drawable/gesture_not_pressed2"
             android:layout_row="6"
             android:layout_column="6"/>
 
@@ -205,7 +206,7 @@
             android:layout_height="45dp"
             android:id="@+id/imageView1001"
             android:layout_marginTop="20dp"
-            android:src="@drawable/gesture_not_pressed"
+            android:src="@drawable/gesture_not_pressed2"
             android:layout_row="0"
             android:layout_column="3"
             android:visibility="invisible"/>
@@ -214,7 +215,7 @@
             android:layout_height="45dp"
             android:id="@+id/imageView1002"
             android:layout_marginTop="20dp"
-            android:src="@drawable/gesture_not_pressed"
+            android:src="@drawable/gesture_not_pressed2"
             android:layout_row="0"
             android:layout_column="5"
             android:visibility="invisible"/>
@@ -222,7 +223,7 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:id="@+id/imageView1003"
-            android:src="@drawable/gesture_not_pressed"
+            android:src="@drawable/gesture_not_pressed2"
             android:layout_row="1"
             android:layout_column="0"
             android:layout_marginLeft="20dp"
@@ -231,7 +232,7 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:id="@+id/imageView1004"
-            android:src="@drawable/gesture_not_pressed"
+            android:src="@drawable/gesture_not_pressed2"
             android:layout_row="3"
             android:layout_column="0"
             android:layout_marginLeft="20dp"
@@ -240,7 +241,7 @@
             android:layout_width="45dp"
             android:layout_height="45dp"
             android:id="@+id/imageView1005"
-            android:src="@drawable/gesture_not_pressed"
+            android:src="@drawable/gesture_not_pressed2"
             android:layout_row="5"
             android:layout_column="0"
             android:layout_marginLeft="20dp"
@@ -250,7 +251,7 @@
             android:layout_height="45dp"
             android:id="@+id/imageView1000"
             android:layout_marginTop="20dp"
-            android:src="@drawable/gesture_not_pressed"
+            android:src="@drawable/gesture_not_pressed2"
             android:layout_row="0"
             android:layout_column="1"
             android:visibility="invisible"/>
@@ -265,7 +266,8 @@
         android:id="@+id/textView4"
         android:layout_alignParentTop="true"
         android:layout_centerHorizontal="true"
-        android:textSize="20dp" />
+        android:textSize="20dp"
+        android:textColor="#FFFFFF"/>
 
     <Button
         android:layout_width="100dp"
@@ -274,16 +276,18 @@
         android:id="@+id/redrawButton"
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true" />
+        android:layout_alignParentStart="true"
+        android:background="#FFFFFF"/>
 
     <Button
-        android:layout_width="wrap_content"
+        android:layout_width="100dp"
         android:layout_height="wrap_content"
         android:text="Confirm"
         android:id="@+id/confirmButton"
-        android:layout_alignTop="@+id/redrawButton"
-        android:layout_toRightOf="@+id/textView4"
-        android:layout_toEndOf="@+id/textView4" />
+        android:layout_below="@+id/gestureGrid"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:background="#FFFFFF"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -292,21 +296,21 @@
         android:text="Username: "
         android:id="@+id/textView5"
         android:textSize="20dp"
-        android:layout_alignTop="@+id/editText"
+        android:layout_above="@+id/gestureGrid"
         android:layout_toLeftOf="@+id/editText"
         android:layout_toStartOf="@+id/editText"
-        android:layout_above="@+id/gestureGrid" />
+        android:textColor="#FFFFFF"/>
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/editText"
-        android:layout_marginRight="55dp"
-        android:layout_marginEnd="55dp"
+        android:layout_marginRight="52dp"
+        android:layout_marginEnd="52dp"
         android:text="usernamegoeshere"
-        android:layout_above="@+id/gestureGrid"
+        android:layout_alignBottom="@+id/textView5"
         android:layout_alignRight="@+id/confirmButton"
-        android:layout_alignEnd="@+id/confirmButton" />
-
+        android:layout_alignEnd="@+id/confirmButton"
+        android:textColor="#FFFFFF"/>
 
 </RelativeLayout>

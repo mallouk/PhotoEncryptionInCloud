@@ -4,7 +4,6 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
@@ -59,8 +58,6 @@ public class CreateBucketActivity extends ActionBarActivity {
 
         relativeLayout.setOnClickListener(new RelativeLayout.OnClickListener(){
             public void onClick(View v){
-                Log.d("Stuff", "Layout!");
-                //relativeLayout
                 Activity activity = CreateBucketActivity.this;
                 InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);

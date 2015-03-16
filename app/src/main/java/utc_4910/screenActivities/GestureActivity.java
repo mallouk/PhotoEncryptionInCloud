@@ -8,9 +8,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import java.util.ArrayList;
 
@@ -27,6 +29,7 @@ public class GestureActivity extends Activity {
     private Button confirmButton;
     private Button redrawButton;
     private boolean passSet = true;
+    private RelativeLayout parentLayout;
 
 
 
@@ -35,6 +38,7 @@ public class GestureActivity extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gesture_activity);
         gridLayout = (GridLayout)findViewById(R.id.gestureGrid);
+        parentLayout = (RelativeLayout)findViewById(R.id.relativeLayout);
 
         confirmButton = (Button)findViewById(R.id.confirmButton);
         redrawButton = (Button)findViewById(R.id.redrawButton);
@@ -63,16 +67,24 @@ public class GestureActivity extends Activity {
     public void runButtonListeners() {
         gridLayout.setOnTouchListener(new PasswordButtonListener());
 
-        /*confirmButton.setOnClickListener(new Button.OnClickListener(){
+        parentLayout.setOnClickListener(new RelativeLayout.OnClickListener(){
+            public void onClick(View v){
+                Activity activity = GestureActivity.this;
+                InputMethodManager inputMethodManager = (InputMethodManager)  activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
+                inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
+            }
+        });
+
+        confirmButton.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v){
 
             }
-        });*/
+        });
 
         redrawButton.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v){
                 for (int i = 0; i < gestureButtons.length; i++){
-                    gestureButtons[i].setImageResource(R.drawable.gesture_not_pressed);
+                    gestureButtons[i].setImageResource(R.drawable.gesture_not_pressed2);
                 }
                 passSet = true;
                 password = new ArrayList<String>();
@@ -100,7 +112,7 @@ public class GestureActivity extends Activity {
                         view.getHitRect(rectView);
                         if (rectView.contains((int) x, (int) y) && gridLayout.getChildAt(i).isShown()) {
                             Log.d("Index: ", i + "");
-                            gestureButtons[i].setImageResource(R.drawable.gesture_pressed);
+                            gestureButtons[i].setImageResource(R.drawable.gesture_pressed2);
                             password.add(i + "");
                         }
                     }
@@ -115,7 +127,7 @@ public class GestureActivity extends Activity {
                         if (rectView.contains((int) x, (int) y) && gridLayout.getChildAt(i).isShown()
                                 && !password.contains(i + "")) {
                             Log.d("Index: ", i + "");
-                            gestureButtons[i].setImageResource(R.drawable.gesture_pressed);
+                            gestureButtons[i].setImageResource(R.drawable.gesture_pressed2);
                             password.add(i + "");
                         }
                     }
@@ -138,11 +150,4 @@ public class GestureActivity extends Activity {
             }
         }
     }
-
-
-
-
-
-
-
 }
