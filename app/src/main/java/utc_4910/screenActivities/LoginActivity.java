@@ -1,8 +1,6 @@
 package utc_4910.screenActivities;
 
-import android.app.Activity;
 import android.content.Intent;
-import android.gesture.Gesture;
 import android.os.Bundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
@@ -37,6 +35,26 @@ public class LoginActivity extends ActionBarActivity {
                 //Launch the next activity.
                 finish();
                 startActivity(i);
+            }
+        });
+
+        createAccountButton.setOnClickListener(new Button.OnClickListener(){
+            public void onClick(View v){
+                Intent i = new Intent();
+                i.setClass(LoginActivity.this, BucketActionActivity.class);
+                //Launch the next activity.
+                finish();
+                startActivity(i);
+            }
+        });
+
+        changePassButton.setOnClickListener(new Button.OnClickListener(){
+            public void onClick(View v){
+//                Intent i = new Intent();
+//                i.setClass(LoginActivity.this, BucketActionActivity.class);
+//                //Launch the next activity.
+//                finish();
+//                startActivity(i);
             }
         });
     }

@@ -5,6 +5,7 @@
     android:layout_height="match_parent"
     android:paddingRight="15dp"
     android:paddingLeft="15dp"
+    android:background="#000000"
     >
 
     <TextView
@@ -14,7 +15,8 @@
         android:text="BucketName objects listed below..."
         android:id="@+id/bucketView"
         android:layout_centerHorizontal="true"
-        android:layout_below="@+id/deleteItemsButton" />
+        android:layout_below="@+id/deleteItemsButton"
+        android:textColor="#FFFFFF"/>
 
     <ListView
         android:layout_width="wrap_content"
@@ -33,7 +35,8 @@
         android:text="Delete"
         android:id="@+id/deleteItemsButton"
         android:layout_alignParentTop="true"
-        android:layout_toLeftOf="@+id/downItemsButton" />
+        android:layout_toLeftOf="@+id/downItemsButton"
+        android:textColor="#FFFFFF"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -42,7 +45,8 @@
         android:id="@+id/downItemsButton"
         android:layout_alignParentTop="true"
         android:layout_alignRight="@+id/spilledBucketList"
-        android:layout_alignEnd="@+id/spilledBucketList" />
+        android:layout_alignEnd="@+id/spilledBucketList"
+        android:textColor="#FFFFFF"/>
 
     <Button
         android:layout_width="wrap_content"
@@ -51,7 +55,8 @@
         android:id="@+id/unselectAllButton"
         android:layout_alignParentTop="true"
         android:layout_toLeftOf="@+id/deleteItemsButton"
-        android:layout_toStartOf="@+id/deleteItemsButton" />
+        android:layout_toStartOf="@+id/deleteItemsButton"
+        android:textColor="#FFFFFF"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -63,7 +68,7 @@
         android:layout_centerHorizontal="true"
         android:layout_marginTop="134dp"
         android:textSize="20dp"
-        android:textColor="#808080"/>
+        android:textColor="#FFFFFF"/>
 
 
 </RelativeLayout>

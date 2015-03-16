@@ -84,7 +84,7 @@ public class GestureActivity extends Activity {
         redrawButton.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v){
                 for (int i = 0; i < gestureButtons.length; i++){
-                    gestureButtons[i].setImageResource(R.drawable.gesture_not_pressed2);
+                    gestureButtons[i].setImageResource(R.drawable.gesture_not_pressed);
                 }
                 passSet = true;
                 password = new ArrayList<String>();
@@ -112,7 +112,7 @@ public class GestureActivity extends Activity {
                         view.getHitRect(rectView);
                         if (rectView.contains((int) x, (int) y) && gridLayout.getChildAt(i).isShown()) {
                             Log.d("Index: ", i + "");
-                            gestureButtons[i].setImageResource(R.drawable.gesture_pressed2);
+                            gestureButtons[i].setImageResource(R.drawable.gesture_pressed);
                             password.add(i + "");
                         }
                     }
@@ -127,7 +127,7 @@ public class GestureActivity extends Activity {
                         if (rectView.contains((int) x, (int) y) && gridLayout.getChildAt(i).isShown()
                                 && !password.contains(i + "")) {
                             Log.d("Index: ", i + "");
-                            gestureButtons[i].setImageResource(R.drawable.gesture_pressed2);
+                            gestureButtons[i].setImageResource(R.drawable.gesture_pressed);
                             password.add(i + "");
                         }
                     }
