@@ -2,16 +2,13 @@ package utc_4910.screenActivities;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.content.Context;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
 
@@ -26,17 +23,22 @@ public class GestureActivity extends Activity {
 
     private ImageView[] gestureButtons = new ImageView[16];
     private GridLayout gridLayout;
-    private PasswordButtonListener passwordButtonListener;
     private ArrayList<String> password = new ArrayList<String>();
+    private Button confirmButton;
+    private Button redrawButton;
+    private boolean passSet = true;
 
+
+
+    @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
         setContentView(R.layout.gesture_activity);
-        passwordButtonListener = new PasswordButtonListener(this);
-        //setContentView(passwordButtonListener);
-
         gridLayout = (GridLayout)findViewById(R.id.gestureGrid);
+
+        confirmButton = (Button)findViewById(R.id.confirmButton);
+        redrawButton = (Button)findViewById(R.id.redrawButton);
+
         gestureButtons[0] = (ImageView)findViewById(R.id.imageView1);
         gestureButtons[1] = (ImageView)findViewById(R.id.imageView2);
         gestureButtons[2] = (ImageView)findViewById(R.id.imageView3);
@@ -53,38 +55,38 @@ public class GestureActivity extends Activity {
         gestureButtons[13] = (ImageView)findViewById(R.id.imageView14);
         gestureButtons[14] = (ImageView)findViewById(R.id.imageView15);
         gestureButtons[15] = (ImageView)findViewById(R.id.imageView16);
-        //comment
+
         this.runButtonListeners();
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public void runButtonListeners() {
-        //for (int x = 0; x < gridLayout.getChildCount(); x++) {
-            //passwordButtonListener.setIndex(x);
-            //gridLayout.getChildAt(x).setOnTouchListener(new PasswordButtonListener(this, x));
-        gridLayout.setOnTouchListener(passwordButtonListener);
-        //}
+        gridLayout.setOnTouchListener(new PasswordButtonListener());
+
+        /*confirmButton.setOnClickListener(new Button.OnClickListener(){
+            public void onClick(View v){
+
+            }
+        });*/
+
+        redrawButton.setOnClickListener(new Button.OnClickListener(){
+            public void onClick(View v){
+                for (int i = 0; i < gestureButtons.length; i++){
+                    gestureButtons[i].setImageResource(R.drawable.gesture_not_pressed);
+                }
+                passSet = true;
+                password = new ArrayList<String>();
+            }
+        });
     }
 
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
-    public class PasswordButtonListener extends View implements View.OnTouchListener{
+    public class PasswordButtonListener implements View.OnTouchListener{
 
-        private int index;
-        private boolean passSet = true;
 
-        public PasswordButtonListener(Context context){
-            super(context);
+        public PasswordButtonListener(){
+
         }
-
-        public PasswordButtonListener(Context context, int index) {
-            super(context);
-            this.index = index;
-        }
-
-        public void setIndex(int index){
-            this.index = index;
-        }
-
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -104,7 +106,6 @@ public class GestureActivity extends Activity {
                     }
                     return true;
                 } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
-                    event.getDeviceId();
                     float x = event.getX();
                     float y = event.getY();
                     for (int i = 0; i < gridLayout.getChildCount(); i++) {
@@ -127,6 +128,7 @@ public class GestureActivity extends Activity {
                     passSet = false;
                     Log.d("Done!", password + "");
                     Log.d("Action", "UP");
+                    //onDraw(this);
                     return true;
                 } else {
                     return false;
@@ -134,15 +136,6 @@ public class GestureActivity extends Activity {
             }else{
                 return false;
             }
-        }
-
-        public void onDraw(Canvas canvas){
-            super.onDraw(canvas);
-            Rect r = new Rect(0, 0, canvas.getWidth(), canvas.getHeight()/2);
-            Paint blue = new Paint(Color.BLUE);
-            blue.setStyle(Paint.Style.FILL);
-
-            canvas.drawRect(r, blue);
         }
     }
 

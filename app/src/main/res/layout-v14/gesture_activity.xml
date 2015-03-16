@@ -1,16 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent" android:layout_height="match_parent">
+    android:layout_width="match_parent" android:layout_height="match_parent"
+    android:id="@+id/rel">
 
 
     <GridLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_centerHorizontal="true"
+        android:layout_height="400dp"
         android:layout_gravity="right"
         android:id="@+id/gestureGrid"
         android:rowCount="8"
-        android:columnCount="8">
+        android:columnCount="8"
+        android:layout_above="@+id/redrawButton"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true">
 
 
 
@@ -252,6 +255,58 @@
             android:layout_column="1"
             android:visibility="invisible"/>
     </GridLayout>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="         Draw your \nauthentication pattern!"
+        android:textAlignment="center"
+        android:id="@+id/textView4"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textSize="20dp" />
+
+    <Button
+        android:layout_width="100dp"
+        android:layout_height="wrap_content"
+        android:text="Redraw"
+        android:id="@+id/redrawButton"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Confirm"
+        android:id="@+id/confirmButton"
+        android:layout_alignTop="@+id/redrawButton"
+        android:layout_toRightOf="@+id/textView4"
+        android:layout_toEndOf="@+id/textView4" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="35dp"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="Username: "
+        android:id="@+id/textView5"
+        android:textSize="20dp"
+        android:layout_alignTop="@+id/editText"
+        android:layout_toLeftOf="@+id/editText"
+        android:layout_toStartOf="@+id/editText"
+        android:layout_above="@+id/gestureGrid" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/editText"
+        android:layout_marginRight="55dp"
+        android:layout_marginEnd="55dp"
+        android:text="usernamegoeshere"
+        android:layout_above="@+id/gestureGrid"
+        android:layout_alignRight="@+id/confirmButton"
+        android:layout_alignEnd="@+id/confirmButton" />
 
 
 </RelativeLayout>
