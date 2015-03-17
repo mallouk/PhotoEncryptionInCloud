@@ -130,7 +130,6 @@ public class CreateAccountActivity extends Activity {
                         printWriter.close();
 
                     } catch (Exception e) {
-                        // TODO Auto-generated catch block
                         e.printStackTrace();
                     }
 
