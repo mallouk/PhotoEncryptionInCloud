@@ -185,7 +185,7 @@ public class CreateAccountActivity extends Activity {
                 }
             }
         });
-
+//comment
         redrawButton.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v){
                 for (int i = 0; i < gestureButtons.length; i++){
