@@ -1,29 +1,22 @@
 package utc_4910.bucketTypes;
 
 import android.os.Environment;
-import android.util.Base64;
-import android.util.Log;
-import com.amazonaws.SDKGlobalConfiguration;
+
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
 import com.amazonaws.services.s3.AmazonS3;
 import com.amazonaws.services.s3.AmazonS3Client;
-import com.amazonaws.services.s3.AmazonS3EncryptionClient;
 import com.amazonaws.services.s3.model.GetObjectRequest;
 import com.amazonaws.services.s3.model.PutObjectRequest;
 import com.amazonaws.services.s3.model.S3Object;
 import com.amazonaws.services.s3.model.S3ObjectSummary;
 import com.amazonaws.services.s3.model.SSECustomerKey;
+
 import java.io.File;
 import java.io.Serializable;
-import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Scanner;
-
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
-import javax.crypto.spec.SecretKeySpec;
 
 import utc_4910.photoencryptionincloud.AmazonAccountKeys;
 
@@ -50,7 +43,7 @@ public class AmazonPartialEncryptionS3Manager implements Serializable {
 
         try {
             File folder = new File(Environment.getExternalStorageDirectory() + "/.AWS");
-            String fileName = "/.bucketKeys.txt";
+            String fileName = "/.keys";
             File keyFile = new File(folder + fileName);
             Scanner scan = new Scanner(keyFile);
             String key = "";
@@ -101,7 +94,7 @@ public class AmazonPartialEncryptionS3Manager implements Serializable {
         S3Object s3Object = null;
         try {
             File folder = new File(Environment.getExternalStorageDirectory() + "/.AWS");
-            String fileName = "/.bucketKeys.txt";
+            String fileName = "/.keys";
             File keyFile = new File(folder + fileName);
             Scanner scan = new Scanner(keyFile);
 
