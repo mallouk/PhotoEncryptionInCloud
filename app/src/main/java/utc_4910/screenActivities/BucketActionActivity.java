@@ -449,6 +449,13 @@ public class BucketActionActivity extends ActionBarActivity {
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
+            Intent i = new Intent();
+            i.setClass(BucketActionActivity.this, MainActivity.class);
+            //Launch the next activity.
+            finish();
+            startActivity(i);
+            Toast.makeText(getApplicationContext(), "Log out complete!",
+                    Toast.LENGTH_LONG).show();
             return true;
         }
 

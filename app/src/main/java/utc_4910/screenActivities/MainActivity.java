@@ -31,7 +31,7 @@ public class MainActivity extends ActionBarActivity {
         loginButton.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v){
                 Intent i = new Intent();
-                i.setClass(MainActivity.this, GestureActivity.class);
+                i.setClass(MainActivity.this, LoginActivity.class);
                 //Launch the next activity.
                 finish();
                 startActivity(i);

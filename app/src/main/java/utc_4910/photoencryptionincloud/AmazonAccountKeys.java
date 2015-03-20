@@ -12,9 +12,7 @@ public class AmazonAccountKeys {
     /** Constructor that defines initial properties
      *
      */
-    public AmazonAccountKeys(){
-
-    }
+    public AmazonAccountKeys(){}
 
     /** Method that returns hardcoded public key to the AWS account.
      *
