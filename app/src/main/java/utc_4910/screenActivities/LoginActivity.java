@@ -115,6 +115,7 @@ public class LoginActivity extends Activity {
                     Log.d("FILE ", passHash);
                     if (password.toString().equals(passHash) && userName.equals(userHash)){
                         Intent i = new Intent();
+                        i.putExtra("UserName", userName);
                         i.setClass(LoginActivity.this, BucketActionActivity.class);
                         //Launch the next activity.
                         finish();

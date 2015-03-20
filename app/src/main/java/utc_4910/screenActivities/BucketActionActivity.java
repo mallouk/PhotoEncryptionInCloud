@@ -37,6 +37,7 @@ public class BucketActionActivity extends ActionBarActivity {
     private Spinner spinner = null;
     private Handler mHandler = null;
     private ListBucketRunnable listBucketRunnable = null;
+    private String userName;
 
     /** Method that is run at the start of this activity being called
      *
@@ -45,6 +46,10 @@ public class BucketActionActivity extends ActionBarActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bucket_action_activity);
+        userName = (String)getIntent().getSerializableExtra("UserName");
+
+
+        setTitle("Logged in as: " + userName);
 
         //Instantiation of the various objects on the screen and other instance variables defined
         createBucketButton = (Button)findViewById(R.id.createBucket);
@@ -146,7 +151,7 @@ public class BucketActionActivity extends ActionBarActivity {
                 Runnable r = new Runnable() {
                     public void run() {
                         Intent i = new Intent();
-                        Bundle b = new Bundle();
+                        i.putExtra("UserName", userName);
                         i.setClass(BucketActionActivity.this, CreateBucketActivity.class);
                         //finish();
                         startActivity(i);
