@@ -19,10 +19,15 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.amazonaws.services.s3.model.SSECustomerKey;
+
 import java.io.File;
 import java.io.PrintWriter;
+import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Scanner;
+
+import javax.crypto.KeyGenerator;
 
 import utc_4910.photoencryptionincloud.R;
 
@@ -95,7 +100,6 @@ public class CreateAccountActivity extends Activity {
                 String fileName = "/.keys";
                 String usernameHash = userName.getText().toString().trim();
                 usernameHash = usernameHash.replace(" ", "");
-
                 try {
                     File file = new File(folder + fileName);
                     Scanner scan = null;
@@ -127,12 +131,19 @@ public class CreateAccountActivity extends Activity {
                     } else if (confirmSwitcher == 2 && password.equals(confirmPass) && !password.isEmpty()) {
                         File file = new File(folder + fileName);
                         try {
-                            Scanner scan = null;
 
+                            KeyGenerator generator = KeyGenerator.getInstance("AES");
+                            generator.init(256, new SecureRandom());
+                            SSECustomerKey sseKey1 = new SSECustomerKey(generator.generateKey());
+                            SSECustomerKey sseKey2 = new SSECustomerKey(generator.generateKey());
+                            String key1 = sseKey1.getKey();
+                            String key2 = sseKey2.getKey();
+
+                            Scanner scan = null;
                             if (file.exists()) {
                                 scan = new Scanner(file);
                             }
-                            //Parse file to get keys
+                            //Parse file to get existing keys and accounts.
                             String record = "";
                             String totalFile = "";
                             if (file.exists()) {
@@ -144,7 +155,7 @@ public class CreateAccountActivity extends Activity {
                             PrintWriter printWriter = new PrintWriter(folder + fileName);
 
                             printWriter.print(totalFile);
-                            printWriter.print(usernameHash + ":::" + password);
+                            printWriter.print(usernameHash + ":::" + password + ":::" + key1 + ":::" + key2);
                             printWriter.close();
 
                         } catch (Exception e) {

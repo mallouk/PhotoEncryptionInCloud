@@ -1,7 +1,6 @@
 package utc_4910.bucketTypes;
 
 import android.os.Environment;
-import android.util.Log;
 
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Region;
@@ -59,7 +58,7 @@ public class AmazonFullEncryptionS3Manager {
         try {
             //Read file
             File folder = new File(Environment.getExternalStorageDirectory() + "/.AWS");
-            String fileName = "/.bucketKeys.txt";
+            String fileName = "/.keys";
             File keyFile = new File(folder + fileName);
             Scanner scan = new Scanner(keyFile);
 
@@ -149,7 +148,7 @@ public class AmazonFullEncryptionS3Manager {
         S3Object s3Object = null;
         try {
             File folder = new File(Environment.getExternalStorageDirectory() + "/.AWS");
-            String fileName = "/.bucketKeys.txt";
+            String fileName = "/.keys";
             File keyFile = new File(folder + fileName);
             Scanner scan = new Scanner(keyFile);
 
