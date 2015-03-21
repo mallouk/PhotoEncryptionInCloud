@@ -31,11 +31,13 @@ public class CreateBucketActivity extends ActionBarActivity {
     private Button createBucketButton = null;
     private BucketManager bucketManager = new BucketManager("capstone");
     private RelativeLayout relativeLayout = null;
+    private String userName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_bucket_activity);
+        userName = (String)getIntent().getSerializableExtra("UserName");
 
         bucketNameEdit = (EditText)findViewById(R.id.bucketNameEdit);
         encryptionPolicySpinner = (Spinner)findViewById(R.id.encryptionPolicySpinner);
@@ -71,13 +73,13 @@ public class CreateBucketActivity extends ActionBarActivity {
                 String bucketName = bucketNameEdit.getText().toString().toLowerCase().trim();
                 bucketName = bucketName.replace(" ", "");
                 if (selectedItem.equals("No Encryption")){
-                    bucketName = "non-username-" + bucketName;
+                    bucketName = "non-" + userName + "-" + bucketName;
                     bucketManager.setBucketName(bucketName);
                 }else if (selectedItem.equals( "Some Encryption")){
-                    bucketName = "som-username-" + bucketName;
+                    bucketName = "som-" + userName + "-" + bucketName;
                     bucketManager.setBucketName(bucketName);
                 }else if (selectedItem.equals("Full Encryption")){
-                    bucketName = "all-username-" + bucketName;
+                    bucketName = "all-" + userName + "-" + bucketName;
                     bucketManager.setBucketName(bucketName);
                 }
             }
@@ -128,16 +130,15 @@ public class CreateBucketActivity extends ActionBarActivity {
                             Toast.LENGTH_LONG).show();
                 }else{
                     if (selectedItem.equals("No Encryption")) {
-                        bucketName = "non-username-" + bucketName;
+                        bucketName = "non-" + userName + "-" + bucketName;
                         bucketManager.setBucketName(bucketName);
                     } else if (selectedItem.equals("Some Encryption")) {
-                        bucketName = "som-username-" + bucketName;
+                        bucketName = "som-" + userName + "-" + bucketName;
                         bucketManager.setBucketName(bucketName);
                     } else if (selectedItem.equals("Full Encryption")) {
-                        bucketName = "all-username-" + bucketName;
+                        bucketName = "all-" + userName + "-" + bucketName;
                         bucketManager.setBucketName(bucketName);
                     }
-                    ;
 
                     Runnable r = new Runnable() {
                         public void run() {
@@ -147,13 +148,12 @@ public class CreateBucketActivity extends ActionBarActivity {
                     ExecutorService executeT1 = Executors.newFixedThreadPool(1);
                     executeT1.execute(r);
                     executeT1.shutdown();
-                    while (!executeT1.isTerminated()) {
-                    }
-                    ;
+                    while (!executeT1.isTerminated()) {};
 
                     Toast.makeText(getApplicationContext(), "'" + bucketManager.getBucketName() + "' bucket created!",
                             Toast.LENGTH_LONG).show();
                     Intent i = new Intent();
+                    i.putExtra("UserName", userName);
                     i.setClass(CreateBucketActivity.this, BucketActionActivity.class);
                     finish();
                     startActivity(i);

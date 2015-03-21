@@ -4,10 +4,10 @@ import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Handler;
 import android.provider.MediaStore;
 import android.support.v7.app.ActionBarActivity;
-import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -16,7 +16,9 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.Spinner;
 import android.widget.Toast;
+
 import com.amazonaws.services.s3.model.Bucket;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
@@ -66,7 +68,6 @@ public class BucketActionActivity extends ActionBarActivity {
 
         //Listen for events such as button clicks.
         this.runButtonListeners();
-
     }
 
     /** Method that holds all of the event detections. When a button is clicked this method
@@ -103,12 +104,17 @@ public class BucketActionActivity extends ActionBarActivity {
          */
         listObjectsButton.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v) {
-                Intent i = new Intent();
-                //Pass the active bucket name to the next activity.
-                i.putExtra("BucketName", bucketManager.getBucketName());
-                i.setClass(BucketActionActivity.this, SpillBucketActivity.class);
-                //Launch the next activity.
-                startActivity(i);
+                if (spinner.getCount() != 0) {
+                    Intent i = new Intent();
+                    //Pass the active bucket name to the next activity.
+                    i.putExtra("BucketName", bucketManager.getBucketName());
+                    i.setClass(BucketActionActivity.this, SpillBucketActivity.class);
+                    //Launch the next activity.
+                    startActivity(i);
+                }else{
+                    Toast.makeText(getApplicationContext(), "You don't have any buckets to look at. Please create one.",
+                            Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -124,6 +130,7 @@ public class BucketActionActivity extends ActionBarActivity {
                 //Encapsulate the gallery call in a runnable thread. We do this because many calls
                 //to the devices systems cannot run on the main user thread and thusly have to be
                 //called via secondary threads.
+
                 Runnable r = new Runnable() {
                     public void run() {
                         Intent imagePicker = new Intent(Intent.ACTION_PICK,
@@ -133,8 +140,13 @@ public class BucketActionActivity extends ActionBarActivity {
                     }
                 };
 
-                Thread t1 = new Thread(r);
-                t1.start();
+                if (spinner.getCount() != 0) {
+                    Thread t1 = new Thread(r);
+                    t1.start();
+                }else{
+                    Toast.makeText(getApplicationContext(), "You don't have any buckets to upload a file to. Please create one.",
+                            Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -153,7 +165,7 @@ public class BucketActionActivity extends ActionBarActivity {
                         Intent i = new Intent();
                         i.putExtra("UserName", userName);
                         i.setClass(BucketActionActivity.this, CreateBucketActivity.class);
-                        //finish();
+                        finish();
                         startActivity(i);
                     }
                 };
@@ -177,48 +189,58 @@ public class BucketActionActivity extends ActionBarActivity {
         deleteBucketButton.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String bucketName = spinner.getSelectedItem().toString();
-                final BucketManager newBucket = new BucketManager(bucketName);
+                if (spinner.getCount() != 0) {
+                    final String bucketName = spinner.getSelectedItem().toString();
+                    final BucketManager newBucket = new BucketManager(bucketName);
 
-                //Threads are dispatched to check if the bucket actually exists and if the bucket
-                //is empty or not.
-                final BucketExistsRunnable bucketExistsRunnable = new BucketExistsRunnable(newBucket);
-                final IsBucketEmptyRunnable isBucketEmptyRunnable = new IsBucketEmptyRunnable(newBucket);
-                ExecutorService execute = Executors.newFixedThreadPool(1);
-                ExecutorService executeT2 = Executors.newFixedThreadPool(5);
-                execute.execute(bucketExistsRunnable);
-                execute.shutdown();
-                while (!execute.isTerminated()){};
+                    //Threads are dispatched to check if the bucket actually exists and if the bucket
+                    //is empty or not.
+                    final BucketExistsRunnable bucketExistsRunnable = new BucketExistsRunnable(newBucket);
+                    final IsBucketEmptyRunnable isBucketEmptyRunnable = new IsBucketEmptyRunnable(newBucket);
+                    ExecutorService execute = Executors.newFixedThreadPool(1);
+                    ExecutorService executeT2 = Executors.newFixedThreadPool(5);
 
-                executeT2.execute(isBucketEmptyRunnable);
-                executeT2.shutdown();
-                while (!executeT2.isTerminated()){};
+                    execute.execute(bucketExistsRunnable);
+                    execute.shutdown();
+                    while (!execute.isTerminated()) {};
 
-                //If the bucket exists and is empty, we destroy it. Otherwise, do nothing.
-                Runnable r = new Runnable() {
-                    public void run(){
-                        if(bucketExistsRunnable.doesBucketExist() && isBucketEmptyRunnable.isBucketEmpty()) {
-                            newBucket.destroyBucket();
+
+                    executeT2.execute(isBucketEmptyRunnable);
+                    executeT2.shutdown();
+                    while (!executeT2.isTerminated()) {};
+
+
+                    //If the bucket exists and is empty, we destroy it. Otherwise, do nothing.
+                    Runnable r = new Runnable() {
+                        public void run() {
+                            if (bucketExistsRunnable.doesBucketExist() && isBucketEmptyRunnable.isBucketEmpty()) {
+                                newBucket.destroyBucket();
+                            }
                         }
-                    }
-                };
+                    };
 
-                //Return the appropriate response to the user.
-                if (bucketExistsRunnable.doesBucketExist() && isBucketEmptyRunnable.isBucketEmpty()) {
-                    Toast.makeText(getApplicationContext(), "'" + bucketName + "' bucket destroyed!",
-                            Toast.LENGTH_LONG).show();
-                }else if (!isBucketEmptyRunnable.isBucketEmpty()){
-                    Toast.makeText(getApplicationContext(), "You can't delete a bucket that has stuff in it.",
+                    //Return the appropriate response to the user.
+                    if (bucketExistsRunnable.doesBucketExist() && isBucketEmptyRunnable.isBucketEmpty()) {
+                        Toast.makeText(getApplicationContext(), "'" + bucketName + "' bucket destroyed!",
+                                Toast.LENGTH_LONG).show();
+                    } else if (!isBucketEmptyRunnable.isBucketEmpty()) {
+                        Toast.makeText(getApplicationContext(), "You can't delete a bucket that has stuff in it.",
+                                Toast.LENGTH_LONG).show();
+                    }
+
+
+                    ExecutorService executeT3 = Executors.newFixedThreadPool(5);
+                    executeT3.execute(r);
+                    executeT3.shutdownNow();
+                    while (!executeT3.isTerminated()) {};
+
+
+                    //Update the spinner list accordingly.
+                    updateBucketList(listBucketRunnable, mHandler, spinner);
+                }else{
+                    Toast.makeText(getApplicationContext(), "You don't have any buckets to destroy. Please create one.",
                             Toast.LENGTH_LONG).show();
                 }
-
-                ExecutorService executeT3 = Executors.newFixedThreadPool(5);
-                executeT3.execute(r);
-                executeT3.shutdownNow();
-                while (!executeT3.isTerminated()){};
-
-                //Update the spinner list accordingly.
-                updateBucketList(listBucketRunnable, mHandler, spinner);
             }
         });
     }
@@ -265,7 +287,9 @@ public class BucketActionActivity extends ActionBarActivity {
             bucketNames = new ArrayList<String>();
             for (int i = 0; i < listBucket.size(); i++){
                 Bucket bucket = listBucket.get(i);
-                bucketNames.add(bucket.getName() + "");
+                if (bucket.getName().contains("-" + userName + "-")) {
+                    bucketNames.add(bucket.getName() + "");
+                }
             }
         }
 
