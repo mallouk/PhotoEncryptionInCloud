@@ -43,7 +43,8 @@ public class MainActivity extends ActionBarActivity {
                 Intent i = new Intent();
                 i.setClass(MainActivity.this, CreateAccountActivity.class);
                 //Launch the next activity.
-                finish();
+                //finish();
+                ///comment
                 startActivity(i);
             }
         });
