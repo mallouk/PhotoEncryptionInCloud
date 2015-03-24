@@ -152,7 +152,7 @@ public class ChangePassActivity extends Activity {
         public PasswordButtonListener(){
 
         }
-
+//comment
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             if (passSet) {
