@@ -48,6 +48,7 @@ public class CreateAccountActivity extends Activity {
     private TextView textView4;
     private int confirmSwitcher = 1;
     private int usernameCollision = 0;
+    private int usernameDefault = 0;
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -93,17 +94,30 @@ public class CreateAccountActivity extends Activity {
             }
         });
 
+        userName.setOnClickListener(new Button.OnClickListener(){
+            public void onClick(View v){
+                if (usernameDefault == 0){
+                    userName.setText("");
+                    usernameDefault = 1;
+                }else{
+                    //Do Nothing
+                }
+            }
+        });
+
         confirmButton.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v) {
                 usernameCollision = 0;
                 File folder = new File(Environment.getExternalStorageDirectory() + "/.AWS");
                 String fileName = "/.keys";
-                String usernameHash = userName.getText().toString().trim();
+                String usernameHash = userName.getText().toString().trim().toLowerCase();
                 usernameHash = usernameHash.replace(" ", "");
                 try {
                     File file = new File(folder + fileName);
                     Scanner scan = null;
-                    if (file.exists()) { scan = new Scanner(file); }
+                    if (file.exists()) {
+                        scan = new Scanner(file);
+                    }
                     String record = "";
                     String totalFile = "";
                     if (file.exists()) {
@@ -115,84 +129,118 @@ public class CreateAccountActivity extends Activity {
                             }
                         }
                     }
-                } catch (Exception e) { e.printStackTrace(); }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
 
-                if (usernameCollision == 0) {
-                    textView4.setText("Redraw your pattern to confirm.");
-                    if (confirmSwitcher == 1 && !password.isEmpty()) {
-                        confirmSwitcher = 2;
-                        for (int i = 0; i < gestureButtons.length; i++) {
-                            gestureButtons[i].setImageResource(R.drawable.gesture_not_pressed);
-                        }
-                        passSet = true;
-                        confirmPass = (ArrayList<String>) (password.clone());
-                        password = new ArrayList<String>();
-
-                    } else if (confirmSwitcher == 2 && password.equals(confirmPass) && !password.isEmpty()) {
-                        File file = new File(folder + fileName);
-                        try {
-
-                            KeyGenerator generator = KeyGenerator.getInstance("AES");
-                            generator.init(256, new SecureRandom());
-                            SSECustomerKey sseKey1 = new SSECustomerKey(generator.generateKey());
-                            SSECustomerKey sseKey2 = new SSECustomerKey(generator.generateKey());
-                            String key1 = sseKey1.getKey();
-                            String key2 = sseKey2.getKey();
-
-                            Scanner scan = null;
-                            if (file.exists()) {
-                                scan = new Scanner(file);
+                String badSymbols = "~`!@#$%^&*()_+=,<>?/;:'[{}]";
+                boolean badSymbolChecker = ((usernameHash.contains(badSymbols.substring(0, 1))) ||
+                        (usernameHash.contains(badSymbols.substring(1, 2))) ||
+                        (usernameHash.contains(badSymbols.substring(2, 3))) ||
+                        (usernameHash.contains(badSymbols.substring(3, 4))) ||
+                        (usernameHash.contains(badSymbols.substring(4, 5))) ||
+                        (usernameHash.contains(badSymbols.substring(5, 6))) ||
+                        (usernameHash.contains(badSymbols.substring(6, 7))) ||
+                        (usernameHash.contains(badSymbols.substring(7, 8))) ||
+                        (usernameHash.contains(badSymbols.substring(8, 9))) ||
+                        (usernameHash.contains(badSymbols.substring(9, 10))) ||
+                        (usernameHash.contains(badSymbols.substring(10, 11))) ||
+                        (usernameHash.contains(badSymbols.substring(11, 12))) ||
+                        (usernameHash.contains(badSymbols.substring(12, 13))) ||
+                        (usernameHash.contains(badSymbols.substring(13, 14))) ||
+                        (usernameHash.contains(badSymbols.substring(14, 15))) ||
+                        (usernameHash.contains(badSymbols.substring(15, 16))) ||
+                        (usernameHash.contains(badSymbols.substring(16, 17))) ||
+                        (usernameHash.contains(badSymbols.substring(17, 18))) ||
+                        (usernameHash.contains(badSymbols.substring(18, 19))) ||
+                        (usernameHash.contains(badSymbols.substring(19, 20))) ||
+                        (usernameHash.contains(badSymbols.substring(20, 21))) ||
+                        (usernameHash.contains(badSymbols.substring(21, 22))) ||
+                        (usernameHash.contains(badSymbols.substring(22, 23))) ||
+                        (usernameHash.contains(badSymbols.substring(23, 24))) ||
+                        (usernameHash.contains(badSymbols.substring(25, 26))) ||
+                        (usernameHash.contains(badSymbols.substring(26, 27))) ||
+                        (usernameHash.contains("\"")));
+                if (badSymbolChecker) {
+                    if (usernameCollision == 0) {
+                        textView4.setText("Redraw your pattern to confirm.");
+                        if (confirmSwitcher == 1 && !password.isEmpty()) {
+                            confirmSwitcher = 2;
+                            for (int i = 0; i < gestureButtons.length; i++) {
+                                gestureButtons[i].setImageResource(R.drawable.gesture_not_pressed);
                             }
-                            //Parse file to get existing keys and accounts.
-                            String record = "";
-                            String totalFile = "";
-                            if (file.exists()) {
-                                while (scan.hasNextLine()) {
-                                    record = scan.nextLine();
-                                    totalFile += record + "\n";
+                            passSet = true;
+                            confirmPass = (ArrayList<String>) (password.clone());
+                            password = new ArrayList<String>();
+
+                        } else if (confirmSwitcher == 2 && password.equals(confirmPass) && !password.isEmpty()) {
+                            File file = new File(folder + fileName);
+                            try {
+
+                                KeyGenerator generator = KeyGenerator.getInstance("AES");
+                                generator.init(256, new SecureRandom());
+                                SSECustomerKey sseKey1 = new SSECustomerKey(generator.generateKey());
+                                SSECustomerKey sseKey2 = new SSECustomerKey(generator.generateKey());
+                                String key1 = sseKey1.getKey();
+                                String key2 = sseKey2.getKey();
+
+                                Scanner scan = null;
+                                if (file.exists()) {
+                                    scan = new Scanner(file);
                                 }
+                                //Parse file to get existing keys and accounts.
+                                String record = "";
+                                String totalFile = "";
+                                if (file.exists()) {
+                                    while (scan.hasNextLine()) {
+                                        record = scan.nextLine();
+                                        totalFile += record + "\n";
+                                    }
+                                }
+                                PrintWriter printWriter = new PrintWriter(folder + fileName);
+
+                                printWriter.print(totalFile);
+                                printWriter.print(usernameHash + ":::" + password + ":::" + key1 + ":::" + key2);
+                                printWriter.close();
+
+                            } catch (Exception e) {
+                                e.printStackTrace();
                             }
-                            PrintWriter printWriter = new PrintWriter(folder + fileName);
 
-                            printWriter.print(totalFile);
-                            printWriter.print(usernameHash + ":::" + password + ":::" + key1 + ":::" + key2);
-                            printWriter.close();
-
-                        } catch (Exception e) {
-                            e.printStackTrace();
+                            Intent i = new Intent();
+                            i.setClass(CreateAccountActivity.this, MainActivity.class);
+                            //Launch the next activity.
+                            finish();
+                            startActivity(i);
+                            Toast.makeText(getApplicationContext(), "Account has been created. You can now login!",
+                                    Toast.LENGTH_LONG).show();
+                        } else if (password.isEmpty()) {
+                            textView4.setText("You can't have an empty pattern\n           password! Try again!");
+                            passSet = true;
+                        } else {
+                            //Passwords don't match.
+                            textView4.setText("         Your confirmed password\n     doesn't match the original one." +
+                                    "\n                    Try again!");
+                            confirmSwitcher = 1;
+                            for (int i = 0; i < gestureButtons.length; i++) {
+                                gestureButtons[i].setImageResource(R.drawable.gesture_not_pressed);
+                            }
+                            passSet = true;
+                            confirmPass = new ArrayList<String>();
+                            password = new ArrayList<String>();
                         }
-
-                        Intent i = new Intent();
-                        i.setClass(CreateAccountActivity.this, MainActivity.class);
-                        //Launch the next activity.
-                        finish();
-                        startActivity(i);
-                        Toast.makeText(getApplicationContext(), "Account has been created. You can now login!",
-                                Toast.LENGTH_LONG).show();
-                    }else if (password.isEmpty()){
-                        textView4.setText("You can't have an empty pattern\n           password! Try again!");
-                        passSet = true;
-                    }else {
-                        //Passwords don't match.
-                        textView4.setText("         Your confirmed password\n     doesn't match the original one." +
-                                "\n                    Try again!");
-                        confirmSwitcher = 1;
+                    } else {
+                        textView4.setText("             Username already exists.\n       Please choose another username" +
+                                "\n              and draw your pattern!");
                         for (int i = 0; i < gestureButtons.length; i++) {
                             gestureButtons[i].setImageResource(R.drawable.gesture_not_pressed);
                         }
                         passSet = true;
-                        confirmPass = new ArrayList<String>();
                         password = new ArrayList<String>();
+
                     }
                 }else{
-                    textView4.setText("             Username already exists.\n       Please choose another username" +
-                            "\n              and draw your pattern!");
-                    for (int i = 0; i < gestureButtons.length; i++) {
-                        gestureButtons[i].setImageResource(R.drawable.gesture_not_pressed);
-                    }
-                    passSet = true;
-                    password = new ArrayList<String>();
-
+                    textView4.setText("   Usernames can only contain\n  letters and numbers. Try again.");
                 }
             }
         });

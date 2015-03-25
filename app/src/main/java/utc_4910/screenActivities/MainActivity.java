@@ -33,7 +33,6 @@ public class MainActivity extends ActionBarActivity {
                 Intent i = new Intent();
                 i.setClass(MainActivity.this, LoginActivity.class);
                 //Launch the next activity.
-                finish();
                 startActivity(i);
             }
         });
@@ -43,8 +42,6 @@ public class MainActivity extends ActionBarActivity {
                 Intent i = new Intent();
                 i.setClass(MainActivity.this, CreateAccountActivity.class);
                 //Launch the next activity.
-                //finish();
-                ///comment
                 startActivity(i);
             }
         });
@@ -54,7 +51,6 @@ public class MainActivity extends ActionBarActivity {
                 Intent i = new Intent();
                 i.setClass(MainActivity.this, BucketActionActivity.class);
                 //Launch the next activity.
-                finish();
                 startActivity(i);
             }
         });

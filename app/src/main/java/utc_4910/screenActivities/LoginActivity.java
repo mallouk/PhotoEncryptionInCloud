@@ -38,7 +38,7 @@ public class LoginActivity extends Activity {
     private RelativeLayout parentLayout;
     private TextView textView4;
     private EditText editText;
-
+    private int usernameDefault = 0;
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public void onCreate(Bundle savedInstanceState) {
@@ -84,6 +84,17 @@ public class LoginActivity extends Activity {
             }
         });
 
+        editText.setOnClickListener(new Button.OnClickListener(){
+            public void onClick(View v){
+                if (usernameDefault == 0){
+                    editText.setText("");
+                    usernameDefault = 1;
+                }else{
+                    //Do Nothing
+                }
+            }
+        });
+
         confirmButton.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v){
                 try {
@@ -91,7 +102,7 @@ public class LoginActivity extends Activity {
                     String fileName = "/.keys";
                     File keyFile = new File(folder + fileName);
                     Scanner scan = new Scanner(keyFile);
-                    String userName = editText.getText().toString().trim();
+                    String userName = editText.getText().toString().trim().toLowerCase();
                     userName = userName.replace(" ", "");
 
                     String record = "";
