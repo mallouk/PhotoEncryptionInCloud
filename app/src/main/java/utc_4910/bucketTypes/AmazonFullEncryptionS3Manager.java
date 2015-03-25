@@ -64,26 +64,42 @@ public class AmazonFullEncryptionS3Manager {
 
             //Parse file to get keys
             String record = "";
-            String userHash = "";
-            String passHash = "";
             String key1 = "";
             String key2 = "";
+            String key3 = "";
+            String key4 = "";
+            String key5 = "";
+            String key6 = "";
+            String key7 = "";
+            String key8 = "";
             while (scan.hasNextLine()) {
                 record = scan.nextLine();
                 String[] info = record.split(":::");
-                userHash = info[0];
-                passHash = info[1];
                 key1 = info[2];
                 key2 = info[3];
+                key3 = info[4];
+                key4 = info[5];
+                key5 = info[6];
+                key6 = info[7];
+                key7 = info[8];
+                key8 = info[9];
             }
 
             //Generate keys
             SSECustomerKey sseKey1 = new SSECustomerKey(key1);
             SSECustomerKey sseKey2 = new SSECustomerKey(key2);
+            SSECustomerKey sseKey3 = new SSECustomerKey(key3);
+            SSECustomerKey sseKey4 = new SSECustomerKey(key4);
+            SSECustomerKey sseKey5 = new SSECustomerKey(key5);
+            SSECustomerKey sseKey6 = new SSECustomerKey(key6);
+            SSECustomerKey sseKey7 = new SSECustomerKey(key7);
+            SSECustomerKey sseKey8 = new SSECustomerKey(key8);
 
             //Place request
             PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, file.getName(), file)
-                    .withSSECustomerKey(sseKey1).withSSECustomerKey(sseKey2);
+                    .withSSECustomerKey(sseKey1).withSSECustomerKey(sseKey2).withSSECustomerKey(sseKey3)
+                    .withSSECustomerKey(sseKey4).withSSECustomerKey(sseKey5).withSSECustomerKey(sseKey6)
+                    .withSSECustomerKey(sseKey7).withSSECustomerKey(sseKey8);
 
             amazonS3Client.putObject(putObjectRequest);
         }catch(Exception e){
@@ -153,25 +169,42 @@ public class AmazonFullEncryptionS3Manager {
             Scanner scan = new Scanner(keyFile);
 
             String record = "";
-            String userHash = "";
-            String passHash = "";
             String key1 = "";
             String key2 = "";
+            String key3 = "";
+            String key4 = "";
+            String key5 = "";
+            String key6 = "";
+            String key7 = "";
+            String key8 = "";
             //Find particular keys in file
             while (scan.hasNextLine()) {
                 record = scan.nextLine();
                 String[] info = record.split(":::");
-                userHash = info[0];
-                passHash = info[1];
                 key1 = info[2];
                 key2 = info[3];
+                key3 = info[4];
+                key4 = info[5];
+                key5 = info[6];
+                key6 = info[7];
+                key7 = info[8];
+                key8 = info[9];
             }
 
             //Decrypt the file and send that stream to return
             SSECustomerKey sseKey1 = new SSECustomerKey(key1);
             SSECustomerKey sseKey2 = new SSECustomerKey(key2);
+            SSECustomerKey sseKey3 = new SSECustomerKey(key3);
+            SSECustomerKey sseKey4 = new SSECustomerKey(key4);
+            SSECustomerKey sseKey5 = new SSECustomerKey(key5);
+            SSECustomerKey sseKey6 = new SSECustomerKey(key6);
+            SSECustomerKey sseKey7 = new SSECustomerKey(key7);
+            SSECustomerKey sseKey8 = new SSECustomerKey(key8);
+
             GetObjectRequest getObjectRequest = new GetObjectRequest(bucketName, file)
-                    .withSSECustomerKey(sseKey1).withSSECustomerKey(sseKey2);
+                    .withSSECustomerKey(sseKey1).withSSECustomerKey(sseKey2).withSSECustomerKey(sseKey3)
+                    .withSSECustomerKey(sseKey4).withSSECustomerKey(sseKey5).withSSECustomerKey(sseKey6)
+                    .withSSECustomerKey(sseKey7).withSSECustomerKey(sseKey8);
 
             s3Object= amazonS3Client.getObject(getObjectRequest);
         }catch(Exception e){

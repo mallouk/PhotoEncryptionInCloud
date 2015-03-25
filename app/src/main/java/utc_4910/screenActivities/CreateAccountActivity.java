@@ -23,6 +23,7 @@ import com.amazonaws.services.s3.model.SSECustomerKey;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.security.MessageDigest;
 import java.security.SecureRandom;
 import java.util.ArrayList;
 import java.util.Scanner;
@@ -119,12 +120,13 @@ public class CreateAccountActivity extends Activity {
                         scan = new Scanner(file);
                     }
                     String record = "";
-                    String totalFile = "";
                     if (file.exists()) {
                         while (scan.hasNextLine()) {
                             record = scan.nextLine();
                             String[] tokens = record.split(":::");
-                            if (tokens[0].equals(usernameHash)) {
+                            String tokenUserName = hashString(tokens[0]);
+                            String usernameHashString = hashString(usernameHash);
+                            if (tokenUserName.equals(usernameHashString)) {
                                 usernameCollision = 1;
                             }
                         }
@@ -161,7 +163,7 @@ public class CreateAccountActivity extends Activity {
                         (usernameHash.contains(badSymbols.substring(25, 26))) ||
                         (usernameHash.contains(badSymbols.substring(26, 27))) ||
                         (usernameHash.contains("\"")));
-                if (badSymbolChecker) {
+                if (!badSymbolChecker) {
                     if (usernameCollision == 0) {
                         textView4.setText("Redraw your pattern to confirm.");
                         if (confirmSwitcher == 1 && !password.isEmpty()) {
@@ -181,8 +183,21 @@ public class CreateAccountActivity extends Activity {
                                 generator.init(256, new SecureRandom());
                                 SSECustomerKey sseKey1 = new SSECustomerKey(generator.generateKey());
                                 SSECustomerKey sseKey2 = new SSECustomerKey(generator.generateKey());
+                                SSECustomerKey sseKey3 = new SSECustomerKey(generator.generateKey());
+                                SSECustomerKey sseKey4 = new SSECustomerKey(generator.generateKey());
+                                SSECustomerKey sseKey5 = new SSECustomerKey(generator.generateKey());
+                                SSECustomerKey sseKey6 = new SSECustomerKey(generator.generateKey());
+                                SSECustomerKey sseKey7 = new SSECustomerKey(generator.generateKey());
+                                SSECustomerKey sseKey8 = new SSECustomerKey(generator.generateKey());
+
                                 String key1 = sseKey1.getKey();
                                 String key2 = sseKey2.getKey();
+                                String key3 = sseKey3.getKey();
+                                String key4 = sseKey4.getKey();
+                                String key5 = sseKey5.getKey();
+                                String key6 = sseKey6.getKey();
+                                String key7 = sseKey7.getKey();
+                                String key8 = sseKey8.getKey();
 
                                 Scanner scan = null;
                                 if (file.exists()) {
@@ -200,7 +215,12 @@ public class CreateAccountActivity extends Activity {
                                 PrintWriter printWriter = new PrintWriter(folder + fileName);
 
                                 printWriter.print(totalFile);
-                                printWriter.print(usernameHash + ":::" + password + ":::" + key1 + ":::" + key2);
+
+                                String usernameHashString = hashString(usernameHash);
+                                String passwordHash = hashString(password.toString());
+                                printWriter.print(usernameHashString + ":::" + passwordHash + ":::" + key1 + ":::" + key2 +
+                                        ":::" + key3 + ":::" + key4 + ":::" + key5 + ":::" + key6 + ":::" + key7 +
+                                        ":::" + key8);
                                 printWriter.close();
 
                             } catch (Exception e) {
@@ -240,7 +260,8 @@ public class CreateAccountActivity extends Activity {
 
                     }
                 }else{
-                    textView4.setText("   Usernames can only contain\n  letters and numbers. Try again.");
+                    textView4.setText("   Usernames can only contain\n  letters and numbers. Try again." + usernameHash);
+
                 }
             }
         });
@@ -259,10 +280,7 @@ public class CreateAccountActivity extends Activity {
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public class PasswordButtonListener implements View.OnTouchListener{
 
-
-        public PasswordButtonListener(){
-
-        }
+        public PasswordButtonListener(){}
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -297,14 +315,12 @@ public class CreateAccountActivity extends Activity {
                     }
                     int[] posXY = {(int) x, (int) y};
                     gridLayout.getLocationOnScreen(posXY);
-                    //Log.d("DRAW", "MOVING " + index + "   " + x + " " + y);
 
                     return true;
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     passSet = false;
                     Log.d("Done!", password + "");
                     Log.d("Action", "UP");
-                    //onDraw(this);
                     return true;
                 } else {
                     return false;
@@ -313,5 +329,24 @@ public class CreateAccountActivity extends Activity {
                 return false;
             }
         }
+    }
+
+    public String hashString(String words){
+        StringBuffer sb = null;
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-1");
+            digest.reset();
+            digest.update(words.getBytes("UTF-8"));
+
+            sb = new StringBuffer();
+            for (byte b : digest.digest()) {
+                sb.append(String.format("%02x", b & 0xff));
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return sb.toString();
     }
 }

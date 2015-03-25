@@ -40,20 +40,33 @@ public class AmazonPartialEncryptionS3Manager implements Serializable {
 
 
     public void putObjectInBucket(String bucketName, File file) {
-
         try {
             File folder = new File(Environment.getExternalStorageDirectory() + "/.AWS");
             String fileName = "/.keys";
             File keyFile = new File(folder + fileName);
             Scanner scan = new Scanner(keyFile);
-            String key = "";
+            String record = "";
+            String key1 = "";
+            String key2 = "";
+            String key3 = "";
+            String key4 = "";
+
             while (scan.hasNextLine()) {
-                key = scan.nextLine();
+                record = scan.nextLine();
+                String[] info = record.split(":::");
+                key1 = info[2];
+                key2 = info[3];
+                key3 = info[4];
+                key4 = info[5];
             }
-            //SecretKey secretKey = generateSecretKey();
-            SSECustomerKey sseKey = new SSECustomerKey(key);
+            SSECustomerKey sseKey1 = new SSECustomerKey(key1);
+            SSECustomerKey sseKey2 = new SSECustomerKey(key2);
+            SSECustomerKey sseKey3 = new SSECustomerKey(key3);
+            SSECustomerKey sseKey4 = new SSECustomerKey(key4);
+
             PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, file.getName(), file)
-                    .withSSECustomerKey(sseKey);
+                    .withSSECustomerKey(sseKey1).withSSECustomerKey(sseKey2)
+                    .withSSECustomerKey(sseKey3).withSSECustomerKey(sseKey4);
             amazonS3Client.putObject(putObjectRequest);
         }catch(Exception e){
             e.printStackTrace();
@@ -99,21 +112,26 @@ public class AmazonPartialEncryptionS3Manager implements Serializable {
             Scanner scan = new Scanner(keyFile);
 
             String record = "";
-            String userHash = "";
-            String passHash = "";
             String key1 = "";
             String key2 = "";
+            String key3 = "";
+            String key4 = "";
+
             while (scan.hasNextLine()) {
                 record = scan.nextLine();
                 String[] info = record.split(":::");
-                userHash = info[0];
-                passHash = info[1];
                 key1 = info[2];
                 key2 = info[3];
+                key3 = info[4];
+                key4 = info[5];
             }
-            SSECustomerKey sseKey = new SSECustomerKey(key1);
+            SSECustomerKey sseKey1 = new SSECustomerKey(key1);
+            SSECustomerKey sseKey2 = new SSECustomerKey(key2);
+            SSECustomerKey sseKey3 = new SSECustomerKey(key3);
+            SSECustomerKey sseKey4 = new SSECustomerKey(key4);
             GetObjectRequest getObjectRequest = new GetObjectRequest(bucketName, file)
-                    .withSSECustomerKey(sseKey);
+                    .withSSECustomerKey(sseKey1).withSSECustomerKey(sseKey2)
+                    .withSSECustomerKey(sseKey3).withSSECustomerKey(sseKey4);
 
             s3Object= amazonS3Client.getObject(getObjectRequest);
         }catch(Exception e){

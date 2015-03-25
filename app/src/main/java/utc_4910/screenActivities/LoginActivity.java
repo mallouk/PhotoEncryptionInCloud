@@ -19,6 +19,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import java.io.File;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Scanner;
 
@@ -104,27 +105,23 @@ public class LoginActivity extends Activity {
                     Scanner scan = new Scanner(keyFile);
                     String userName = editText.getText().toString().trim().toLowerCase();
                     userName = userName.replace(" ", "");
+                    String userNameHash = hashString(userName);
+                    String passwordHash = hashString(password.toString());
 
                     String record = "";
                     String userHash = "";
                     String passHash = "";
-                    String key1 = "";
-                    String key2 = "";
                     while (scan.hasNextLine()) {
                         record = scan.nextLine();
                         String[] info = record.split(":::");
                         userHash = info[0];
                         passHash = info[1];
-                        key1 = info[2];
-                        key2 = info[3];
-                        if (userName.equals(userHash)){
+                        if (userNameHash.equals(userHash)){
                             break;
                         }
                     }
 
-                    Log.d("TEST ", password.toString());
-                    Log.d("FILE ", passHash);
-                    if (password.toString().equals(passHash) && userName.equals(userHash)){
+                    if (passwordHash.equals(passHash) && userNameHash.equals(userHash)){
                         Intent i = new Intent();
                         i.putExtra("UserName", userName);
                         i.setClass(LoginActivity.this, BucketActionActivity.class);
@@ -159,10 +156,7 @@ public class LoginActivity extends Activity {
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public class PasswordButtonListener implements View.OnTouchListener{
 
-
-        public PasswordButtonListener(){
-
-        }
+        public PasswordButtonListener(){}
 
         @Override
         public boolean onTouch(View v, MotionEvent event) {
@@ -213,5 +207,24 @@ public class LoginActivity extends Activity {
                 return false;
             }
         }
+    }
+
+    public String hashString(String words){
+        StringBuffer sb = null;
+        try {
+            MessageDigest digest = MessageDigest.getInstance("SHA-1");
+            digest.reset();
+            digest.update(words.getBytes("UTF-8"));
+
+            sb = new StringBuffer();
+            for (byte b : digest.digest()) {
+                sb.append(String.format("%02x", b & 0xff));
+            }
+
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return sb.toString();
     }
 }
