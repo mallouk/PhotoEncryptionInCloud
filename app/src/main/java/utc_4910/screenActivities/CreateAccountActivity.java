@@ -263,7 +263,6 @@ public class CreateAccountActivity extends Activity {
                     }
                 }else{
                     textView4.setText("   Usernames can only contain\n  letters and numbers. Try again." + usernameHash);
-
                 }
             }
         });

@@ -138,8 +138,6 @@ public class LoginActivity extends Activity {
                         password = new ArrayList<String>();
                     }
                 } catch (Exception e) {e.printStackTrace();}
-
-
             }
         });
 
