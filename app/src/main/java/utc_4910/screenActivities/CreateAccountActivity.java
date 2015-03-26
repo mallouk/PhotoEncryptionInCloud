@@ -13,9 +13,10 @@ import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
-import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TableLayout;
+import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -38,7 +39,7 @@ import utc_4910.photoencryptionincloud.R;
 public class CreateAccountActivity extends Activity {
 
     private ImageView[] gestureButtons = new ImageView[16];
-    private GridLayout gridLayout;
+    private TableLayout gridLayout;
     private ArrayList<String> password = new ArrayList<String>();
     private ArrayList<String> confirmPass= new ArrayList<String>();
     private Button confirmButton;
@@ -54,7 +55,7 @@ public class CreateAccountActivity extends Activity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.gesture_activity);
-        gridLayout = (GridLayout)findViewById(R.id.gestureGrid);
+        gridLayout = (TableLayout)findViewById(R.id.gestureGrid);
         parentLayout = (RelativeLayout)findViewById(R.id.relativeLayout);
 
         textView4 = (TextView)findViewById(R.id.textView4);
@@ -110,6 +111,7 @@ public class CreateAccountActivity extends Activity {
             public void onClick(View v) {
                 usernameCollision = 0;
                 File folder = new File(Environment.getExternalStorageDirectory() + "/.AWS");
+                folder.mkdirs();
                 String fileName = "/.keys";
                 String usernameHash = userName.getText().toString().trim().toLowerCase();
                 usernameHash = usernameHash.replace(" ", "");
@@ -124,7 +126,7 @@ public class CreateAccountActivity extends Activity {
                         while (scan.hasNextLine()) {
                             record = scan.nextLine();
                             String[] tokens = record.split(":::");
-                            String tokenUserName = hashString(tokens[0]);
+                            String tokenUserName = tokens[0];
                             String usernameHashString = hashString(usernameHash);
                             if (tokenUserName.equals(usernameHashString)) {
                                 usernameCollision = 1;
@@ -289,13 +291,21 @@ public class CreateAccountActivity extends Activity {
                     float x = event.getX();
                     float y = event.getY();
                     for (int i = 0; i < gridLayout.getChildCount(); i++) {
-                        View view = gridLayout.getChildAt(i);
-                        Rect rectView = new Rect();
-                        view.getHitRect(rectView);
-                        if (rectView.contains((int) x, (int) y) && gridLayout.getChildAt(i).isShown()) {
-                            Log.d("Index: ", i + "");
-                            gestureButtons[i].setImageResource(R.drawable.gesture_pressed);
-                            password.add(i + "");
+                        TableRow row = (TableRow)gridLayout.getChildAt(i);
+                        View rowView = (View)gridLayout.getChildAt(i);
+                        Rect rectViewRows = new Rect();
+                        rowView.getHitRect(rectViewRows);
+                        if (rectViewRows.contains((int) x, (int) y)){
+                            y = y - gridLayout.getChildAt(i).getY();
+                            for (int j = 0; j < row.getChildCount(); j++) {
+                                View view = (View) row.getChildAt(j);
+                                Rect rectView = new Rect();
+                                view.getHitRect(rectView);
+                                if (rectView.contains((int) x, (int) y)){
+                                    gestureButtons[i*4+j].setImageResource(R.drawable.gesture_pressed);
+                                    password.add((i*4+j) + "");
+                                }
+                            }
                         }
                     }
                     return true;
@@ -303,14 +313,21 @@ public class CreateAccountActivity extends Activity {
                     float x = event.getX();
                     float y = event.getY();
                     for (int i = 0; i < gridLayout.getChildCount(); i++) {
-                        View view = gridLayout.getChildAt(i);
-                        Rect rectView = new Rect();
-                        view.getHitRect(rectView);
-                        if (rectView.contains((int) x, (int) y) && gridLayout.getChildAt(i).isShown()
-                                && !password.contains(i + "")) {
-                            Log.d("Index: ", i + "");
-                            gestureButtons[i].setImageResource(R.drawable.gesture_pressed);
-                            password.add(i + "");
+                        TableRow row = (TableRow)gridLayout.getChildAt(i);
+                        View rowView = (View)gridLayout.getChildAt(i);
+                        Rect rectViewRows = new Rect();
+                        rowView.getHitRect(rectViewRows);
+                        if (rectViewRows.contains((int) x, (int) y)){
+                            y = y - gridLayout.getChildAt(i).getY();
+                            for (int j = 0; j < row.getChildCount(); j++) {
+                                View view = (View) row.getChildAt(j);
+                                Rect rectView = new Rect();
+                                view.getHitRect(rectView);
+                                if (rectView.contains((int) x, (int) y) && !password.contains((i*4+j) + "")){
+                                    gestureButtons[i*4+j].setImageResource(R.drawable.gesture_pressed);
+                                    password.add((i*4+j) + "");
+                                }
+                            }
                         }
                     }
                     int[] posXY = {(int) x, (int) y};

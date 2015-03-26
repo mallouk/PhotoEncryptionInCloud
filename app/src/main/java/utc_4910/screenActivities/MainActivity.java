@@ -49,7 +49,7 @@ public class MainActivity extends ActionBarActivity {
         changePassButton.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v){
                 Intent i = new Intent();
-                i.setClass(MainActivity.this, BucketActionActivity.class);
+                i.setClass(MainActivity.this, GestureActivity.class);
                 //Launch the next activity.
                 startActivity(i);
             }

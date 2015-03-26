@@ -2,17 +2,22 @@ package utc_4910.screenActivities;
 
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.content.res.Resources;
 import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
+import android.util.TypedValue;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.GridLayout;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 
 import java.util.ArrayList;
 
@@ -36,31 +41,78 @@ public class GestureActivity extends Activity {
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.gesture_activity);
-        gridLayout = (GridLayout)findViewById(R.id.gestureGrid);
-        parentLayout = (RelativeLayout)findViewById(R.id.relativeLayout);
+        Resources r = getResources();
 
-        confirmButton = (Button)findViewById(R.id.confirmButton);
-        redrawButton = (Button)findViewById(R.id.redrawButton);
+        RelativeLayout relativeLayout = new RelativeLayout(this);
+        TextView messages = new TextView(this);
+        messages.setText("Draw your stuff!");
+        messages.setId(1);
+        RelativeLayout.LayoutParams textViewDetails = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
 
-        gestureButtons[0] = (ImageView)findViewById(R.id.imageView1);
-        gestureButtons[1] = (ImageView)findViewById(R.id.imageView2);
-        gestureButtons[2] = (ImageView)findViewById(R.id.imageView3);
-        gestureButtons[3] = (ImageView)findViewById(R.id.imageView4);
-        gestureButtons[4] = (ImageView)findViewById(R.id.imageView5);
-        gestureButtons[5] = (ImageView)findViewById(R.id.imageView6);
-        gestureButtons[6] = (ImageView)findViewById(R.id.imageView7);
-        gestureButtons[7] = (ImageView)findViewById(R.id.imageView8);
-        gestureButtons[8] = (ImageView)findViewById(R.id.imageView9);
-        gestureButtons[9] = (ImageView)findViewById(R.id.imageView10);
-        gestureButtons[10] = (ImageView)findViewById(R.id.imageView11);
-        gestureButtons[11] = (ImageView)findViewById(R.id.imageView12);
-        gestureButtons[12] = (ImageView)findViewById(R.id.imageView13);
-        gestureButtons[13] = (ImageView)findViewById(R.id.imageView14);
-        gestureButtons[14] = (ImageView)findViewById(R.id.imageView15);
-        gestureButtons[15] = (ImageView)findViewById(R.id.imageView16);
+        textViewDetails.addRule(RelativeLayout.CENTER_HORIZONTAL);
 
-        this.runButtonListeners();
+        TextView usernameCap = new TextView(this);
+        usernameCap.setText("Username: ");
+        usernameCap.setId(2);
+        RelativeLayout.LayoutParams usernameCapDetails = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
+
+        usernameCapDetails.addRule(RelativeLayout.BELOW, messages.getId());
+        usernameCapDetails.setMargins(300,20, 0, 0);
+
+
+
+        EditText username = new EditText(this);
+        username.setText("usernamegoeshere");
+        RelativeLayout.LayoutParams usernameDetails = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT
+        );
+        usernameDetails.addRule(RelativeLayout.RIGHT_OF, usernameCap.getId());
+        usernameDetails.setMargins(10, 20, 0, 0);
+        int pxUsernameEdit = (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_DIP, 50,r.getDisplayMetrics());
+        username.setMinWidth(pxUsernameEdit);
+
+        GridLayout gestureGrid = new GridLayout(this);
+        ImageView gestureButton1 = new ImageView(getApplicationContext());
+        gestureGrid.addView(gestureButton1);
+
+        relativeLayout.addView(messages, textViewDetails);
+        relativeLayout.addView(usernameCap, usernameCapDetails);
+        relativeLayout.addView(username, usernameDetails);
+        relativeLayout.addView(gestureGrid);
+
+
+        setContentView(relativeLayout);
+//        gridLayout = (GridLayout)findViewById(R.id.gestureGrid);
+//        parentLayout = (RelativeLayout)findViewById(R.id.relativeLayout);
+//
+//        confirmButton = (Button)findViewById(R.id.confirmButton);
+//        redrawButton = (Button)findViewById(R.id.redrawButton);
+//
+//        gestureButtons[0] = (ImageView)findViewById(R.id.imageView1);
+//        gestureButtons[1] = (ImageView)findViewById(R.id.imageView2);
+//        gestureButtons[2] = (ImageView)findViewById(R.id.imageView3);
+//        gestureButtons[3] = (ImageView)findViewById(R.id.imageView4);
+//        gestureButtons[4] = (ImageView)findViewById(R.id.imageView5);
+//        gestureButtons[5] = (ImageView)findViewById(R.id.imageView6);
+//        gestureButtons[6] = (ImageView)findViewById(R.id.imageView7);
+//        gestureButtons[7] = (ImageView)findViewById(R.id.imageView8);
+//        gestureButtons[8] = (ImageView)findViewById(R.id.imageView9);
+//        gestureButtons[9] = (ImageView)findViewById(R.id.imageView10);
+//        gestureButtons[10] = (ImageView)findViewById(R.id.imageView11);
+//        gestureButtons[11] = (ImageView)findViewById(R.id.imageView12);
+//        gestureButtons[12] = (ImageView)findViewById(R.id.imageView13);
+//        gestureButtons[13] = (ImageView)findViewById(R.id.imageView14);
+//        gestureButtons[14] = (ImageView)findViewById(R.id.imageView15);
+//        gestureButtons[15] = (ImageView)findViewById(R.id.imageView16);
+//
+//        this.runButtonListeners();
     }
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
