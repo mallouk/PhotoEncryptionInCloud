@@ -21,6 +21,7 @@ public class MainActivity extends ActionBarActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.main_activity);
+
         loginButton = (Button)findViewById(R.id.loginButton);
         createAccountButton = (Button)findViewById(R.id.createAccountButton);
         changePassButton = (Button)findViewById(R.id.changePassButton);
@@ -48,24 +49,24 @@ public class MainActivity extends ActionBarActivity {
             }
         });
 
-        changePassButton.setOnClickListener(new Button.OnClickListener(){
-            public void onClick(View v){
-                Intent i = new Intent();
-                i.setClass(MainActivity.this, ChangePassActivity.class);
-                //Launch the next activity.
-                startActivity(i);
-            }
-        });
-
-        deleteAccountButton.setOnClickListener(new Button.OnClickListener(){
-
-            public void onClick(View v) {
-                Intent i = new Intent();
-                i.setClass(MainActivity.this, DeleteAccountActivity.class);
-                //Launch the next activity.
-                startActivity(i);
-            }
-        });
+//        changePassButton.setOnClickListener(new Button.OnClickListener(){
+//            public void onClick(View v){
+//                Intent i = new Intent();
+//                i.setClass(MainActivity.this, ChangePassActivity.class);
+//                //Launch the next activity.
+//                startActivity(i);
+//            }
+//        });
+//
+//        deleteAccountButton.setOnClickListener(new Button.OnClickListener(){
+//
+//            public void onClick(View v) {
+//                Intent i = new Intent();
+//                i.setClass(MainActivity.this, DeleteAccountActivity.class);
+//                //Launch the next activity.
+//                startActivity(i);
+//            }
+//        });
     }
 
 }
