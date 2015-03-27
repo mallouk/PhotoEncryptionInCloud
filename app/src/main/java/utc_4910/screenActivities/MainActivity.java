@@ -61,7 +61,7 @@ public class MainActivity extends ActionBarActivity {
 
             public void onClick(View v) {
                 Intent i = new Intent();
-                i.setClass(MainActivity.this, ChangePassActivity.class);
+                i.setClass(MainActivity.this, DeleteAccountActivity.class);
                 //Launch the next activity.
                 startActivity(i);
             }

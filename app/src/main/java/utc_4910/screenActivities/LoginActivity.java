@@ -7,6 +7,7 @@ import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -29,7 +30,7 @@ import utc_4910.photoencryptionincloud.R;
 /**
  * Created by Matthew Jallouk on 3/1/2015.
  */
-public class LoginActivity extends Activity {
+public class LoginActivity extends ActionBarActivity {
 
     private ImageView[] gestureButtons = new ImageView[16];
     private TableLayout gridLayout;
@@ -45,6 +46,9 @@ public class LoginActivity extends Activity {
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle("Login Account Screen");
+
+
         setContentView(R.layout.gesture_activity);
         gridLayout = (TableLayout)findViewById(R.id.gestureGrid);
         parentLayout = (RelativeLayout)findViewById(R.id.relativeLayout);

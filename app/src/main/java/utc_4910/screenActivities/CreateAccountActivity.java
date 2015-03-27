@@ -7,6 +7,7 @@ import android.graphics.Rect;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v7.app.ActionBarActivity;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -36,7 +37,7 @@ import utc_4910.photoencryptionincloud.R;
 /**
  * Created by Matthew Jallouk on 3/16/2015.
  */
-public class CreateAccountActivity extends Activity {
+public class CreateAccountActivity extends ActionBarActivity {
 
     private ImageView[] gestureButtons = new ImageView[16];
     private TableLayout gridLayout;
@@ -54,6 +55,8 @@ public class CreateAccountActivity extends Activity {
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        setTitle("Create Account Screen");
+
         setContentView(R.layout.gesture_activity);
         gridLayout = (TableLayout)findViewById(R.id.gestureGrid);
         parentLayout = (RelativeLayout)findViewById(R.id.relativeLayout);
@@ -233,7 +236,6 @@ public class CreateAccountActivity extends Activity {
                             i.setClass(CreateAccountActivity.this, MainActivity.class);
                             //Launch the next activity.
                             finish();
-                            startActivity(i);
                             Toast.makeText(getApplicationContext(), "Account has been created. You can now login!",
                                     Toast.LENGTH_LONG).show();
                         } else if (password.isEmpty()) {

@@ -37,6 +37,8 @@ public class CreateBucketActivity extends ActionBarActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_bucket_activity);
+        setTitle("Create Bucket Screen");
+
         userName = (String)getIntent().getSerializableExtra("UserName");
 
         bucketNameEdit = (EditText)findViewById(R.id.bucketNameEdit);

@@ -32,7 +32,7 @@ import utc_4910.photoencryptionincloud.R;
 /**
  * Created by Matthew Jallouk on 3/1/2015.
  */
-public class ChangePassActivity extends ActionBarActivity {
+public class DeleteAccountActivity extends ActionBarActivity {
 
     private ImageView[] gestureButtons = new ImageView[16];
     private TableLayout tableLayout;
@@ -45,14 +45,12 @@ public class ChangePassActivity extends ActionBarActivity {
     private EditText editText;
     private int usernameDefault = 0;
     private int newPassword = 0;
-    private int confirmSwitcher = 0;
-    private ArrayList<String> confirmPass;
-
+    private String totalFile = "";
 
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setTitle("Change Password Screen");
+        setTitle("Delete Account Screen");
 
         setContentView(R.layout.gesture_activity);
         tableLayout = (TableLayout)findViewById(R.id.gestureGrid);
@@ -90,7 +88,7 @@ public class ChangePassActivity extends ActionBarActivity {
 
         parentLayout.setOnClickListener(new RelativeLayout.OnClickListener(){
             public void onClick(View v){
-                Activity activity = ChangePassActivity.this;
+                Activity activity = DeleteAccountActivity.this;
                 InputMethodManager inputMethodManager =
                         (InputMethodManager)activity.getSystemService(Activity.INPUT_METHOD_SERVICE);
                 inputMethodManager.hideSoftInputFromWindow(activity.getCurrentFocus().getWindowToken(), 0);
@@ -120,36 +118,33 @@ public class ChangePassActivity extends ActionBarActivity {
                     userName = userName.replace(" ", "");
                     String userNameHash = hashString(userName);
                     String passwordHash = hashString(password.toString());
-                    String totalFile = "";
-                    String changingUserKeys = "";
+                    Log.d("record: ", totalFile);
+
 
                     if (newPassword == 0) { //Entering current password.
                         String record = "";
 
                         String userHash = "";
                         String passHash = "";
-                        int foundMatch = 0;
                         while (scan.hasNextLine()) {
                             record = scan.nextLine();
                             String[] info = record.split(":::");
-
-                            if (foundMatch == 0) {
-                                userHash = info[0];
-                                passHash = info[1];
-                                changingUserKeys+=info[2] + ":::" + info[3] + ":::" + info[4] + ":::" + info[5] + ":::" +
-                                        info[6] + ":::" + info[7] + ":::" + info[8] + ":::" + info[9];
-                            }
+                            userHash = info[0];
+                            passHash = info[1];
 
                             if (userNameHash.equals(userHash)) {
                                 //Do Nothing
-                                foundMatch = 1;
                             } else {
                                 totalFile += record + "\n";
+                                Log.d("recordDODODDODO ", totalFile);
                             }
+                            Log.d("recordWHATWHAT ", totalFile);
                         }
+                        Log.d("record:---- ", totalFile);
 
                         if (passwordHash.equals(passHash) && userNameHash.equals(userHash)) {
-                            textView4.setText("         Draw your new\nauthentication pattern!");
+                            textView4.setText(" Press 'Confirm' to finish or the back\n      button " +
+                                    "to stop this operation.");
                             for (int i = 0; i < gestureButtons.length; i++) {
                                 gestureButtons[i].setImageResource(R.drawable.gesture_not_pressed);
                             }
@@ -165,46 +160,20 @@ public class ChangePassActivity extends ActionBarActivity {
                             password = new ArrayList<String>();
                         }
                     }else if (newPassword == 1){ //Enter new password
-                        if (confirmSwitcher == 0 && !password.isEmpty()){
-                            textView4.setText("Redraw your new pattern to confirm.");
-                            for (int i = 0; i < gestureButtons.length; i++) {
-                                gestureButtons[i].setImageResource(R.drawable.gesture_not_pressed);
-                            }
-                            passSet = true;
-                            confirmPass = (ArrayList<String>) (password.clone());
-                            password = new ArrayList<String>();
-                            confirmSwitcher = 1;
-                        }else if (confirmSwitcher == 1 && password.equals(confirmPass) && !password.isEmpty()) {
-                            PrintWriter printWriter = new PrintWriter(folder + fileName);
+                        PrintWriter printWriter = new PrintWriter(folder + fileName);
 
-                            passwordHash = hashString(password.toString());
-                            printWriter.print(totalFile);
+                        passwordHash = hashString(password.toString());
+                        printWriter.print(totalFile);
+                        printWriter.close();
 
-                            printWriter.print(userNameHash + ":::" + passwordHash + ":::" + changingUserKeys);
-                            printWriter.close();
+                        Intent i = new Intent();
+                        i.setClass(DeleteAccountActivity.this, MainActivity.class);
+                        //Launch the next activity.
+                        finish();
+                        startActivity(i);
+                        Toast.makeText(getApplicationContext(), "'" + userName + "' account has been destroyed!",
+                                Toast.LENGTH_LONG).show();
 
-                            Intent i = new Intent();
-                            i.setClass(ChangePassActivity.this, MainActivity.class);
-                            //Launch the next activity.
-                            finish();
-                            startActivity(i);
-                            Toast.makeText(getApplicationContext(), "Account password has been changed!",
-                                    Toast.LENGTH_LONG).show();
-                        }else if (password.isEmpty()) {
-                            textView4.setText("You can't have an empty pattern\n           password! Try again!");
-                            passSet = true;
-                        } else {
-                            //Passwords don't match.
-                            textView4.setText("         Your confirmed password\n     doesn't match the original one." +
-                                    "\n                    Try again!");
-                            confirmSwitcher = 0;
-                            for (int i = 0; i < gestureButtons.length; i++) {
-                                gestureButtons[i].setImageResource(R.drawable.gesture_not_pressed);
-                            }
-                            passSet = true;
-                            confirmPass = new ArrayList<String>();
-                            password = new ArrayList<String>();
-                        }
                     }
                 } catch (Exception e) {e.printStackTrace();}
             }

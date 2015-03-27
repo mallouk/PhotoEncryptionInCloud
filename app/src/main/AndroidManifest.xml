@@ -12,11 +12,12 @@
         android:theme="@style/AppTheme" >
         <activity
             android:name="utc_4910.screenActivities.MainActivity"
-            android:label="@string/app_name" >
+            android:label="@string/app_name"
+            android:screenOrientation="portrait">>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
+
             </intent-filter>
         </activity>
 
@@ -55,7 +56,10 @@
             android:screenOrientation="portrait">
         </activity>
 
-
+        <activity
+            android:name="utc_4910.screenActivities.DeleteAccountActivity"
+            android:screenOrientation="portrait">
+        </activity>
 
     </application>
 </manifest>
