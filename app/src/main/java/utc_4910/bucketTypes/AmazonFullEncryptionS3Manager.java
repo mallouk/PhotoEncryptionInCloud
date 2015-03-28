@@ -25,8 +25,8 @@ import utc_4910.photoencryptionincloud.AmazonAccountKeys;
 public class AmazonFullEncryptionS3Manager {
 
     //Define instance variables
-    private String amazonAccessKeyID = new AmazonAccountKeys().getPublicKey();
-    private String amazonPrivateKey = new AmazonAccountKeys().getPrivateKey();
+    private String amazonAccessKeyID = AmazonAccountKeys.getPublicKey();
+    private String amazonPrivateKey = AmazonAccountKeys.getPrivateKey();
     public AmazonS3 amazonS3Client;
 
     /** Constructor that is run to set the initial properties of the object.
@@ -58,7 +58,7 @@ public class AmazonFullEncryptionS3Manager {
         try {
             //Read file
             File folder = new File(Environment.getExternalStorageDirectory() + "/.AWS");
-            String fileName = "/.keys";
+            String fileName = AmazonAccountKeys.getKeyFile();
             File keyFile = new File(folder + fileName);
             Scanner scan = new Scanner(keyFile);
 
@@ -141,13 +141,6 @@ public class AmazonFullEncryptionS3Manager {
             fileNamesList.add(file.getKey());
         }
         return fileNamesList;
-
-        /*ArrayList<String> filesInBucket = new ArrayList<String>();
-        for (int i = 0; i < amazonS3Client.listObjects(bucketName).getObjectSummaries().size(); i++){
-            S3ObjectSummary fileObject = amazonS3Client.listObjects(bucketName).getObjectSummaries().get(i);
-            filesInBucket.add(fileObject.getKey());
-        }
-        return filesInBucket;*/
     }
 
     /** Method that obtains a particular file object from a specific bucket and downloads
@@ -164,7 +157,7 @@ public class AmazonFullEncryptionS3Manager {
         S3Object s3Object = null;
         try {
             File folder = new File(Environment.getExternalStorageDirectory() + "/.AWS");
-            String fileName = "/.keys";
+            String fileName = AmazonAccountKeys.getKeyFile();
             File keyFile = new File(folder + fileName);
             Scanner scan = new Scanner(keyFile);
 

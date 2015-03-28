@@ -25,8 +25,8 @@ import utc_4910.photoencryptionincloud.AmazonAccountKeys;
  */
 public class AmazonPartialEncryptionS3Manager implements Serializable {
 
-    private String amazonAccessKeyID = new AmazonAccountKeys().getPublicKey();
-    private String amazonPrivateKey = new AmazonAccountKeys().getPrivateKey();
+    private String amazonAccessKeyID = AmazonAccountKeys.getPublicKey();
+    private String amazonPrivateKey = AmazonAccountKeys.getPrivateKey();
     public AmazonS3 amazonS3Client;
 
     public AmazonPartialEncryptionS3Manager(){
@@ -42,7 +42,7 @@ public class AmazonPartialEncryptionS3Manager implements Serializable {
     public void putObjectInBucket(String bucketName, File file) {
         try {
             File folder = new File(Environment.getExternalStorageDirectory() + "/.AWS");
-            String fileName = "/.keys";
+            String fileName = AmazonAccountKeys.getKeyFile();
             File keyFile = new File(folder + fileName);
             Scanner scan = new Scanner(keyFile);
             String record = "";
@@ -93,13 +93,6 @@ public class AmazonPartialEncryptionS3Manager implements Serializable {
             fileNamesList.add(file.getKey());
         }
         return fileNamesList;
-
-        /*ArrayList<String> filesInBucket = new ArrayList<String>();
-        for (int i = 0; i < amazonS3Client.listObjects(bucketName).getObjectSummaries().size(); i++){
-            S3ObjectSummary fileObject = amazonS3Client.listObjects(bucketName).getObjectSummaries().get(i);
-            filesInBucket.add(fileObject.getKey());
-        }
-        return filesInBucket;*/
     }
 
 
@@ -107,7 +100,7 @@ public class AmazonPartialEncryptionS3Manager implements Serializable {
         S3Object s3Object = null;
         try {
             File folder = new File(Environment.getExternalStorageDirectory() + "/.AWS");
-            String fileName = "/.keys";
+            String fileName = AmazonAccountKeys.getKeyFile();
             File keyFile = new File(folder + fileName);
             Scanner scan = new Scanner(keyFile);
 

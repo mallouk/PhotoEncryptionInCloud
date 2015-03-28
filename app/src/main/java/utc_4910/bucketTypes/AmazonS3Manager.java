@@ -25,8 +25,8 @@ public class AmazonS3Manager  implements Serializable {
     *  amazon account and going to "Security Credentials".
     *  Rest of private variables defined here.
     */
-    private String amazonAccessKeyID = new AmazonAccountKeys().getPublicKey();
-    private String amazonPrivateKey = new AmazonAccountKeys().getPrivateKey();
+    private String amazonAccessKeyID = AmazonAccountKeys.getPublicKey();
+    private String amazonPrivateKey = AmazonAccountKeys.getPrivateKey();
     private AmazonS3Client amazonS3Client;
 
     /** Constructor that defines the initial properties of the AmazonS3Manager object.

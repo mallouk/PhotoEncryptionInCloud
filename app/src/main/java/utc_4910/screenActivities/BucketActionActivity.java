@@ -49,8 +49,6 @@ public class BucketActionActivity extends ActionBarActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bucket_action_activity);
         userName = (String)getIntent().getSerializableExtra("UserName");
-
-
         setTitle("Logged in as: " + userName);
 
         //Instantiation of the various objects on the screen and other instance variables defined
@@ -482,7 +480,6 @@ public class BucketActionActivity extends ActionBarActivity {
             i.setClass(BucketActionActivity.this, MainActivity.class);
             //Launch the next activity.
             finish();
-            startActivity(i);
             Toast.makeText(getApplicationContext(), "Log out complete!",
                     Toast.LENGTH_LONG).show();
             return true;

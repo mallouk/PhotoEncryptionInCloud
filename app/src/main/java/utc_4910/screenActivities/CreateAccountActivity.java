@@ -32,6 +32,7 @@ import java.util.Scanner;
 
 import javax.crypto.KeyGenerator;
 
+import utc_4910.photoencryptionincloud.AmazonAccountKeys;
 import utc_4910.photoencryptionincloud.R;
 
 /**
@@ -115,7 +116,7 @@ public class CreateAccountActivity extends ActionBarActivity {
                 usernameCollision = 0;
                 File folder = new File(Environment.getExternalStorageDirectory() + "/.AWS");
                 folder.mkdirs();
-                String fileName = "/.keys";
+                String fileName = AmazonAccountKeys.getKeyFile();
                 String usernameHash = userName.getText().toString().trim().toLowerCase();
                 usernameHash = usernameHash.replace(" ", "");
                 try {

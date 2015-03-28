@@ -1,11 +1,10 @@
 package utc_4910.screenActivities;
 
-import android.app.Activity;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Environment;
-import android.util.Log;
+import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -14,7 +13,9 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
 import com.amazonaws.services.s3.model.S3Object;
+
 import java.io.FileOutputStream;
 import java.io.InputStream;
 import java.util.ArrayList;
@@ -27,7 +28,7 @@ import utc_4910.photoencryptionincloud.R;
 /**
  * Created by Matthew Jallouk on 2/18/2015.
  */
-public class SpillBucketActivity extends Activity{
+public class SpillBucketActivity extends ActionBarActivity {
 
     //Variables defined here for use throughout the class
     private ListView spilledBucketList = null;
@@ -49,6 +50,7 @@ public class SpillBucketActivity extends Activity{
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.display_bucketlist_activity);
+        setTitle("Spill Bucket Screen");
 
         //Instantiation of the various objects on the screen and other instance variables defined
         spilledBucketList = (ListView) findViewById(R.id.spilledBucketList);

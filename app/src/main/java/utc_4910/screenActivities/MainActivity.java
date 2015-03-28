@@ -15,8 +15,7 @@ public class MainActivity extends ActionBarActivity {
 
     private Button loginButton = null;
     private Button createAccountButton = null;
-    private Button changePassButton = null;
-    private Button deleteAccountButton = null;
+
 
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -24,8 +23,6 @@ public class MainActivity extends ActionBarActivity {
 
         loginButton = (Button)findViewById(R.id.loginButton);
         createAccountButton = (Button)findViewById(R.id.createAccountButton);
-        changePassButton = (Button)findViewById(R.id.changePassButton);
-        deleteAccountButton = (Button)findViewById(R.id.deleteAccountButton);
 
         this.runButtonListeners();
     }
@@ -48,25 +45,6 @@ public class MainActivity extends ActionBarActivity {
                 startActivity(i);
             }
         });
-
-//        changePassButton.setOnClickListener(new Button.OnClickListener(){
-//            public void onClick(View v){
-//                Intent i = new Intent();
-//                i.setClass(MainActivity.this, ChangePassActivity.class);
-//                //Launch the next activity.
-//                startActivity(i);
-//            }
-//        });
-//
-//        deleteAccountButton.setOnClickListener(new Button.OnClickListener(){
-//
-//            public void onClick(View v) {
-//                Intent i = new Intent();
-//                i.setClass(MainActivity.this, DeleteAccountActivity.class);
-//                //Launch the next activity.
-//                startActivity(i);
-//            }
-//        });
     }
 
 }

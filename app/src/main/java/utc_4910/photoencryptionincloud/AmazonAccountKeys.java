@@ -6,8 +6,9 @@ package utc_4910.photoencryptionincloud;
 public class AmazonAccountKeys {
 
     //Defined instance variables
-    private String publicKey = "";
-    private String privateKey = "";
+    private static String publicKey = "";
+    private static String privateKey = "";
+    private static String keyFile = "/keys";
 
     /** Constructor that defines initial properties
      *
@@ -18,15 +19,24 @@ public class AmazonAccountKeys {
      *
      * @return                      returns public key.
      */
-    public String getPublicKey(){
-        return this.publicKey;
+    public static String getPublicKey(){
+        return publicKey;
     }
 
     /** Method that returns the hardcoded private key to the AWS account.
      *
      * @return                      returns private key.
      */
-    public String getPrivateKey(){
-        return this.privateKey;
+    public static String getPrivateKey(){
+        return privateKey;
+    }
+
+    /** Method that returns the hardcoded key file to access the accounts
+     *  of the users on the device.
+     *
+     * @return                      returns the key file name.
+     */
+    public static String getKeyFile(){
+        return keyFile;
     }
 }

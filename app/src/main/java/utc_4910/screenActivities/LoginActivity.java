@@ -25,6 +25,7 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Scanner;
 
+import utc_4910.photoencryptionincloud.AmazonAccountKeys;
 import utc_4910.photoencryptionincloud.R;
 
 /**
@@ -105,7 +106,7 @@ public class LoginActivity extends ActionBarActivity {
             public void onClick(View v){
                 try {
                     File folder = new File(Environment.getExternalStorageDirectory() + "/.AWS");
-                    String fileName = "/.keys";
+                    String fileName = AmazonAccountKeys.getKeyFile();
                     File keyFile = new File(folder + fileName);
                     Scanner scan = new Scanner(keyFile);
                     String userName = editText.getText().toString().trim().toLowerCase();
