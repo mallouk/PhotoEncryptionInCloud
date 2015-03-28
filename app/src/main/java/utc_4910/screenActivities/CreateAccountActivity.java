@@ -33,6 +33,7 @@ import java.util.Scanner;
 import javax.crypto.KeyGenerator;
 
 import utc_4910.photoencryptionincloud.AmazonAccountKeys;
+import utc_4910.photoencryptionincloud.FileKeyEncryption;
 import utc_4910.photoencryptionincloud.R;
 
 /**
@@ -116,13 +117,14 @@ public class CreateAccountActivity extends ActionBarActivity {
                 usernameCollision = 0;
                 File folder = new File(Environment.getExternalStorageDirectory() + "/.AWS");
                 folder.mkdirs();
-                String fileName = AmazonAccountKeys.getKeyFile();
+                String fileName = AmazonAccountKeys.getKeyFileName();
                 String usernameHash = userName.getText().toString().trim().toLowerCase();
                 usernameHash = usernameHash.replace(" ", "");
                 try {
                     File file = new File(folder + fileName);
                     Scanner scan = null;
                     if (file.exists()) {
+                        FileKeyEncryption.decrypt(FileKeyEncryption.getSpecialKey(), file, file);
                         scan = new Scanner(file);
                     }
                     String record = "";
@@ -229,6 +231,7 @@ public class CreateAccountActivity extends ActionBarActivity {
                                         ":::" + key8);
                                 printWriter.close();
 
+                                FileKeyEncryption.encrypt(FileKeyEncryption.getSpecialKey(), file, file);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }

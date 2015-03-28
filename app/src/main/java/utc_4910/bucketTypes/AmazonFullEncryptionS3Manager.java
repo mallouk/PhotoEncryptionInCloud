@@ -18,6 +18,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import utc_4910.photoencryptionincloud.AmazonAccountKeys;
+import utc_4910.photoencryptionincloud.FileKeyEncryption;
 
 /**
  * Created by Matthew Jallouk on 3/1/2015.
@@ -27,6 +28,9 @@ public class AmazonFullEncryptionS3Manager {
     //Define instance variables
     private String amazonAccessKeyID = AmazonAccountKeys.getPublicKey();
     private String amazonPrivateKey = AmazonAccountKeys.getPrivateKey();
+    private int fullKeyArrayLen = 8;
+    private SSECustomerKey[] sseKey;
+    private File keyFile;
     public AmazonS3 amazonS3Client;
 
     /** Constructor that is run to set the initial properties of the object.
@@ -35,6 +39,9 @@ public class AmazonFullEncryptionS3Manager {
     public AmazonFullEncryptionS3Manager(){
         amazonS3Client = new AmazonS3Client(new BasicAWSCredentials(amazonAccessKeyID, amazonPrivateKey));
         amazonS3Client.setRegion(Region.getRegion(Regions.US_EAST_1));
+        File folder = new File(Environment.getExternalStorageDirectory() + "/.AWS");
+        String fileName = AmazonAccountKeys.getKeyFileName();
+        keyFile = new File(folder + fileName);
     }
 
     /** Method that creates the bucket in the AWS cloud, it uses the bucket name taken as a param
@@ -56,50 +63,16 @@ public class AmazonFullEncryptionS3Manager {
         //Read the encrypted keys from the file stored on the device for the particular user.
         //We then use those keys to encrypt the photo we send up to the cloud.
         try {
-            //Read file
-            File folder = new File(Environment.getExternalStorageDirectory() + "/.AWS");
-            String fileName = AmazonAccountKeys.getKeyFile();
-            File keyFile = new File(folder + fileName);
-            Scanner scan = new Scanner(keyFile);
-
-            //Parse file to get keys
-            String record = "";
-            String key1 = "";
-            String key2 = "";
-            String key3 = "";
-            String key4 = "";
-            String key5 = "";
-            String key6 = "";
-            String key7 = "";
-            String key8 = "";
-            while (scan.hasNextLine()) {
-                record = scan.nextLine();
-                String[] info = record.split(":::");
-                key1 = info[2];
-                key2 = info[3];
-                key3 = info[4];
-                key4 = info[5];
-                key5 = info[6];
-                key6 = info[7];
-                key7 = info[8];
-                key8 = info[9];
-            }
-
-            //Generate keys
-            SSECustomerKey sseKey1 = new SSECustomerKey(key1);
-            SSECustomerKey sseKey2 = new SSECustomerKey(key2);
-            SSECustomerKey sseKey3 = new SSECustomerKey(key3);
-            SSECustomerKey sseKey4 = new SSECustomerKey(key4);
-            SSECustomerKey sseKey5 = new SSECustomerKey(key5);
-            SSECustomerKey sseKey6 = new SSECustomerKey(key6);
-            SSECustomerKey sseKey7 = new SSECustomerKey(key7);
-            SSECustomerKey sseKey8 = new SSECustomerKey(key8);
+            parseFileAndGenerateKeys();
 
             //Place request
             PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, file.getName(), file)
-                    .withSSECustomerKey(sseKey1).withSSECustomerKey(sseKey2).withSSECustomerKey(sseKey3)
-                    .withSSECustomerKey(sseKey4).withSSECustomerKey(sseKey5).withSSECustomerKey(sseKey6)
-                    .withSSECustomerKey(sseKey7).withSSECustomerKey(sseKey8);
+                    .withSSECustomerKey(sseKey[0]).withSSECustomerKey(sseKey[1])
+                    .withSSECustomerKey(sseKey[2]).withSSECustomerKey(sseKey[3])
+                    .withSSECustomerKey(sseKey[4]).withSSECustomerKey(sseKey[5])
+                    .withSSECustomerKey(sseKey[6]).withSSECustomerKey(sseKey[7]);
+
+            FileKeyEncryption.encrypt(FileKeyEncryption.getSpecialKey(), keyFile, keyFile);
 
             amazonS3Client.putObject(putObjectRequest);
         }catch(Exception e){
@@ -156,48 +129,14 @@ public class AmazonFullEncryptionS3Manager {
         //We then use those keys to decrypt the photo we sent up to the cloud.
         S3Object s3Object = null;
         try {
-            File folder = new File(Environment.getExternalStorageDirectory() + "/.AWS");
-            String fileName = AmazonAccountKeys.getKeyFile();
-            File keyFile = new File(folder + fileName);
-            Scanner scan = new Scanner(keyFile);
-
-            String record = "";
-            String key1 = "";
-            String key2 = "";
-            String key3 = "";
-            String key4 = "";
-            String key5 = "";
-            String key6 = "";
-            String key7 = "";
-            String key8 = "";
-            //Find particular keys in file
-            while (scan.hasNextLine()) {
-                record = scan.nextLine();
-                String[] info = record.split(":::");
-                key1 = info[2];
-                key2 = info[3];
-                key3 = info[4];
-                key4 = info[5];
-                key5 = info[6];
-                key6 = info[7];
-                key7 = info[8];
-                key8 = info[9];
-            }
-
-            //Decrypt the file and send that stream to return
-            SSECustomerKey sseKey1 = new SSECustomerKey(key1);
-            SSECustomerKey sseKey2 = new SSECustomerKey(key2);
-            SSECustomerKey sseKey3 = new SSECustomerKey(key3);
-            SSECustomerKey sseKey4 = new SSECustomerKey(key4);
-            SSECustomerKey sseKey5 = new SSECustomerKey(key5);
-            SSECustomerKey sseKey6 = new SSECustomerKey(key6);
-            SSECustomerKey sseKey7 = new SSECustomerKey(key7);
-            SSECustomerKey sseKey8 = new SSECustomerKey(key8);
+            parseFileAndGenerateKeys();
 
             GetObjectRequest getObjectRequest = new GetObjectRequest(bucketName, file)
-                    .withSSECustomerKey(sseKey1).withSSECustomerKey(sseKey2).withSSECustomerKey(sseKey3)
-                    .withSSECustomerKey(sseKey4).withSSECustomerKey(sseKey5).withSSECustomerKey(sseKey6)
-                    .withSSECustomerKey(sseKey7).withSSECustomerKey(sseKey8);
+                    .withSSECustomerKey(sseKey[0]).withSSECustomerKey(sseKey[1])
+                    .withSSECustomerKey(sseKey[2]).withSSECustomerKey(sseKey[3])
+                    .withSSECustomerKey(sseKey[4]).withSSECustomerKey(sseKey[5])
+                    .withSSECustomerKey(sseKey[6]).withSSECustomerKey(sseKey[7]);
+            FileKeyEncryption.encrypt(FileKeyEncryption.getSpecialKey(), keyFile, keyFile);
 
             s3Object= amazonS3Client.getObject(getObjectRequest);
         }catch(Exception e){
@@ -205,4 +144,30 @@ public class AmazonFullEncryptionS3Manager {
         }
         return s3Object;
     }
+
+    public void parseFileAndGenerateKeys() throws Exception{
+        FileKeyEncryption.decrypt(FileKeyEncryption.getSpecialKey(), keyFile, keyFile);
+
+        Scanner scan = new Scanner(keyFile);
+        String record = "";
+        String[] keyStrings = new String[fullKeyArrayLen];
+
+        while (scan.hasNextLine()) {
+            record = scan.nextLine();
+            String[] info = record.split(":::");
+            keyStrings[0] = info[2];
+            keyStrings[1] = info[3];
+            keyStrings[2] = info[4];
+            keyStrings[3] = info[5];
+            keyStrings[4] = info[6];
+            keyStrings[5] = info[7];
+            keyStrings[6] = info[8];
+            keyStrings[7] = info[9];
+        }
+        sseKey = new SSECustomerKey[fullKeyArrayLen];
+        for (int i = 0; i < fullKeyArrayLen; i++) {
+            sseKey[i] = new SSECustomerKey(keyStrings[i]);
+        }
+    }
+
 }

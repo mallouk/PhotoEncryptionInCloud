@@ -19,6 +19,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import utc_4910.photoencryptionincloud.AmazonAccountKeys;
+import utc_4910.photoencryptionincloud.FileKeyEncryption;
 
 /**
  * Created by Matthew Jallouk on 2/28/2015.
@@ -27,11 +28,18 @@ public class AmazonPartialEncryptionS3Manager implements Serializable {
 
     private String amazonAccessKeyID = AmazonAccountKeys.getPublicKey();
     private String amazonPrivateKey = AmazonAccountKeys.getPrivateKey();
+    private int partialKeyArrayLen = 4;
+    private SSECustomerKey[] sseKey;
+    private File keyFile;
     public AmazonS3 amazonS3Client;
+
 
     public AmazonPartialEncryptionS3Manager(){
         amazonS3Client = new AmazonS3Client(new BasicAWSCredentials(amazonAccessKeyID, amazonPrivateKey));
         amazonS3Client.setRegion(Region.getRegion(Regions.US_EAST_1));
+        File folder = new File(Environment.getExternalStorageDirectory() + "/.AWS");
+        String fileName = AmazonAccountKeys.getKeyFileName();
+        keyFile = new File(folder + fileName);
     }
 
     public void createBucket(String bucketName){
@@ -41,33 +49,14 @@ public class AmazonPartialEncryptionS3Manager implements Serializable {
 
     public void putObjectInBucket(String bucketName, File file) {
         try {
-            File folder = new File(Environment.getExternalStorageDirectory() + "/.AWS");
-            String fileName = AmazonAccountKeys.getKeyFile();
-            File keyFile = new File(folder + fileName);
-            Scanner scan = new Scanner(keyFile);
-            String record = "";
-            String key1 = "";
-            String key2 = "";
-            String key3 = "";
-            String key4 = "";
-
-            while (scan.hasNextLine()) {
-                record = scan.nextLine();
-                String[] info = record.split(":::");
-                key1 = info[2];
-                key2 = info[3];
-                key3 = info[4];
-                key4 = info[5];
-            }
-            SSECustomerKey sseKey1 = new SSECustomerKey(key1);
-            SSECustomerKey sseKey2 = new SSECustomerKey(key2);
-            SSECustomerKey sseKey3 = new SSECustomerKey(key3);
-            SSECustomerKey sseKey4 = new SSECustomerKey(key4);
+            parseFileAndGenerateKeys();
 
             PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, file.getName(), file)
-                    .withSSECustomerKey(sseKey1).withSSECustomerKey(sseKey2)
-                    .withSSECustomerKey(sseKey3).withSSECustomerKey(sseKey4);
+                    .withSSECustomerKey(sseKey[0]).withSSECustomerKey(sseKey[1])
+                    .withSSECustomerKey(sseKey[2]).withSSECustomerKey(sseKey[3]);
+
             amazonS3Client.putObject(putObjectRequest);
+            FileKeyEncryption.encrypt(FileKeyEncryption.getSpecialKey(), keyFile, keyFile);
         }catch(Exception e){
             e.printStackTrace();
         }
@@ -99,37 +88,37 @@ public class AmazonPartialEncryptionS3Manager implements Serializable {
     public S3Object getObjectInBucket(String bucketName, String file){
         S3Object s3Object = null;
         try {
-            File folder = new File(Environment.getExternalStorageDirectory() + "/.AWS");
-            String fileName = AmazonAccountKeys.getKeyFile();
-            File keyFile = new File(folder + fileName);
-            Scanner scan = new Scanner(keyFile);
-
-            String record = "";
-            String key1 = "";
-            String key2 = "";
-            String key3 = "";
-            String key4 = "";
-
-            while (scan.hasNextLine()) {
-                record = scan.nextLine();
-                String[] info = record.split(":::");
-                key1 = info[2];
-                key2 = info[3];
-                key3 = info[4];
-                key4 = info[5];
-            }
-            SSECustomerKey sseKey1 = new SSECustomerKey(key1);
-            SSECustomerKey sseKey2 = new SSECustomerKey(key2);
-            SSECustomerKey sseKey3 = new SSECustomerKey(key3);
-            SSECustomerKey sseKey4 = new SSECustomerKey(key4);
+            parseFileAndGenerateKeys();
             GetObjectRequest getObjectRequest = new GetObjectRequest(bucketName, file)
-                    .withSSECustomerKey(sseKey1).withSSECustomerKey(sseKey2)
-                    .withSSECustomerKey(sseKey3).withSSECustomerKey(sseKey4);
+                    .withSSECustomerKey(sseKey[0]).withSSECustomerKey(sseKey[1])
+                    .withSSECustomerKey(sseKey[2]).withSSECustomerKey(sseKey[3]);
 
             s3Object= amazonS3Client.getObject(getObjectRequest);
+            FileKeyEncryption.encrypt(FileKeyEncryption.getSpecialKey(), keyFile, keyFile);
         }catch(Exception e){
             e.printStackTrace();
         }
         return s3Object;
+    }
+
+    public void parseFileAndGenerateKeys() throws Exception{
+        FileKeyEncryption.decrypt(FileKeyEncryption.getSpecialKey(), keyFile, keyFile);
+
+        Scanner scan = new Scanner(keyFile);
+        String record = "";
+        String[] keyStrings = new String[partialKeyArrayLen];
+
+        while (scan.hasNextLine()) {
+            record = scan.nextLine();
+            String[] info = record.split(":::");
+            keyStrings[0] = info[2];
+            keyStrings[1] = info[3];
+            keyStrings[2] = info[4];
+            keyStrings[3] = info[5];
+        }
+        sseKey = new SSECustomerKey[partialKeyArrayLen];
+        for (int i = 0; i < partialKeyArrayLen; i++) {
+            sseKey[i] = new SSECustomerKey(keyStrings[i]);
+        }
     }
 }

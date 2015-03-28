@@ -26,6 +26,7 @@ import java.util.ArrayList;
 import java.util.Scanner;
 
 import utc_4910.photoencryptionincloud.AmazonAccountKeys;
+import utc_4910.photoencryptionincloud.FileKeyEncryption;
 import utc_4910.photoencryptionincloud.R;
 
 /**
@@ -106,8 +107,10 @@ public class LoginActivity extends ActionBarActivity {
             public void onClick(View v){
                 try {
                     File folder = new File(Environment.getExternalStorageDirectory() + "/.AWS");
-                    String fileName = AmazonAccountKeys.getKeyFile();
+                    String fileName = AmazonAccountKeys.getKeyFileName();
                     File keyFile = new File(folder + fileName);
+                    FileKeyEncryption.decrypt(FileKeyEncryption.getSpecialKey(), keyFile, keyFile);
+
                     Scanner scan = new Scanner(keyFile);
                     String userName = editText.getText().toString().trim().toLowerCase();
                     userName = userName.replace(" ", "");
@@ -128,6 +131,7 @@ public class LoginActivity extends ActionBarActivity {
                     }
 
                     if (passwordHash.equals(passHash) && userNameHash.equals(userHash)){
+                        FileKeyEncryption.encrypt(FileKeyEncryption.getSpecialKey(), keyFile, keyFile);
                         Intent i = new Intent();
                         i.putExtra("UserName", userName);
                         i.setClass(LoginActivity.this, BucketActionActivity.class);
