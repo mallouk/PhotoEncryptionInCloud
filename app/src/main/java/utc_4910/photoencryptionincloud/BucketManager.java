@@ -1,15 +1,12 @@
 package utc_4910.photoencryptionincloud;
 
 import android.util.Log;
-
 import com.amazonaws.services.s3.model.Bucket;
 import com.amazonaws.services.s3.model.S3Object;
-
 import java.io.File;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-
 import utc_4910.bucketTypes.AmazonFullEncryptionS3Manager;
 import utc_4910.bucketTypes.AmazonPartialEncryptionS3Manager;
 import utc_4910.bucketTypes.AmazonS3Manager;

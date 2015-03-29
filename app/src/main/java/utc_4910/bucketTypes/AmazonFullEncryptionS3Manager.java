@@ -1,7 +1,6 @@
 package utc_4910.bucketTypes;
 
 import android.os.Environment;
-
 import com.amazonaws.auth.BasicAWSCredentials;
 import com.amazonaws.regions.Region;
 import com.amazonaws.regions.Regions;
@@ -53,6 +52,14 @@ public class AmazonFullEncryptionS3Manager {
         amazonS3Client.createBucket(bucketName);
     }
 
+    /** Method that deletes a bucket on the AWS account associated with the hardcoded keys above.
+     *
+     * @param bucketName        name of the bucket that will be destroyed.
+     */
+    public void deleteBucket(String bucketName){
+        amazonS3Client.deleteBucket(bucketName);
+    }
+
     /** Method that places a file into a particular bucket associated with the AWS keys above.
      *
      * @param bucketName        name of the bucket that will hold the uploaded file.
@@ -80,13 +87,6 @@ public class AmazonFullEncryptionS3Manager {
         }
     }
 
-    /** Method that deletes a bucket on the AWS account associated with the hardcoded keys above.
-     *
-     * @param bucketName        name of the bucket that will be destroyed.
-     */
-    public void deleteBucket(String bucketName){
-        amazonS3Client.deleteBucket(bucketName);
-    }
 
     /** Method that checks if a bucket exists on the AWS account or not, it returns true/false
      *  based upon if the bucket does exist.
@@ -145,13 +145,22 @@ public class AmazonFullEncryptionS3Manager {
         return s3Object;
     }
 
+    /** Method that decrypts the key file, parses it, and extracts the various keys used to
+     *  encrypt/decrypt the photos when uploaded/downloaded.
+     *
+     * @throws Exception        throws a FileNotFound exception
+     */
     public void parseFileAndGenerateKeys() throws Exception{
+        //Decrypt file
         FileKeyEncryption.decrypt(FileKeyEncryption.getSpecialKey(), keyFile, keyFile);
 
+        //Define variables.
         Scanner scan = new Scanner(keyFile);
         String record = "";
         String[] keyStrings = new String[fullKeyArrayLen];
 
+        //Go through file, find username and get the keys for that username to
+        //encrypt/decrypt files.
         while (scan.hasNextLine()) {
             record = scan.nextLine();
             String[] info = record.split(":::");

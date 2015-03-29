@@ -33,7 +33,9 @@ public class AmazonPartialEncryptionS3Manager implements Serializable {
     private File keyFile;
     public AmazonS3 amazonS3Client;
 
-
+    /** Constructor that is run to set the initial properties of the object.
+     *
+     */
     public AmazonPartialEncryptionS3Manager(){
         amazonS3Client = new AmazonS3Client(new BasicAWSCredentials(amazonAccessKeyID, amazonPrivateKey));
         amazonS3Client.setRegion(Region.getRegion(Regions.US_EAST_1));
@@ -42,12 +44,32 @@ public class AmazonPartialEncryptionS3Manager implements Serializable {
         keyFile = new File(folder + fileName);
     }
 
+    /** Method that creates the bucket in the AWS cloud, it uses the bucket name taken as a param
+     *  as the name of which to give it.
+     *
+     * @param bucketName                    name of the bucket
+     */
     public void createBucket(String bucketName){
         amazonS3Client.createBucket(bucketName);
     }
 
+    /** Method that deletes a bucket on the AWS account associated with the hardcoded keys above.
+     *
+     * @param bucketName        name of the bucket that will be destroyed.
+     */
+    public void deleteBucket(String bucketName){
+        amazonS3Client.deleteBucket(bucketName);
+    }
 
+    /** Method that places a file into a particular bucket associated with the AWS keys above.
+     *
+     * @param bucketName        name of the bucket that will hold the uploaded file.
+     * @param file              file that will uploaded to the AWS bucket.
+     */
     public void putObjectInBucket(String bucketName, File file) {
+
+        //Read the encrypted keys from the file stored on the device for the particular user.
+        //We then use those keys to encrypt the photo we send up to the cloud.
         try {
             parseFileAndGenerateKeys();
 
@@ -62,16 +84,21 @@ public class AmazonPartialEncryptionS3Manager implements Serializable {
         }
     }
 
-
-    public void deleteBucket(String bucketName){
-        amazonS3Client.deleteBucket(bucketName);
-    }
-
-
+    /** Method that checks if a bucket exists on the AWS account or not, it returns true/false
+     *  based upon if the bucket does exist.
+     *
+     * @param bucketName        name of the bucket that is checked whether or not it exists.
+     * @return                  returns true/false on if the bucket exists.
+     */
     public boolean bucketExist(String bucketName){
         return amazonS3Client.doesBucketExist(bucketName);
     }
 
+    /** Method that deletes an object from a specific bucket.
+     *
+     * @param bucketName        name of the bucket that contains the file to be deleted
+     * @param fileName          name of the file to be deleted
+     */
     public void deleteObjectInBucket(String bucketName, String fileName){
         amazonS3Client.deleteObject(bucketName, fileName);
     }
@@ -84,7 +111,13 @@ public class AmazonPartialEncryptionS3Manager implements Serializable {
         return fileNamesList;
     }
 
-
+    /** Method that obtains a particular file object from a specific bucket and downloads
+     *  this object to the user's device, we use the keys to decrypt the encrypted file.
+     *
+     * @param bucketName        name of the bucket that contains the file to be downloaded
+     * @param file              name of the file to be downloaded to the user's device
+     * @return                  returns the s3Object key of the specific file from the bucket
+     */
     public S3Object getObjectInBucket(String bucketName, String file){
         S3Object s3Object = null;
         try {
@@ -101,13 +134,22 @@ public class AmazonPartialEncryptionS3Manager implements Serializable {
         return s3Object;
     }
 
+    /** Method that decrypts the key file, parses it, and extracts the various keys used to
+     *  encrypt/decrypt the photos when uploaded/downloaded.
+     *
+     * @throws Exception        throws a FileNotFound exception
+     */
     public void parseFileAndGenerateKeys() throws Exception{
+        //Decrypt file
         FileKeyEncryption.decrypt(FileKeyEncryption.getSpecialKey(), keyFile, keyFile);
 
+        //Define variables.
         Scanner scan = new Scanner(keyFile);
         String record = "";
         String[] keyStrings = new String[partialKeyArrayLen];
 
+        //Go through file, find username and get the keys for that username to
+        //encrypt/decrypt files.
         while (scan.hasNextLine()) {
             record = scan.nextLine();
             String[] info = record.split(":::");
