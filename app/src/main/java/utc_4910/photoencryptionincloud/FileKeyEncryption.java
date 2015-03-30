@@ -80,6 +80,10 @@ public class FileKeyEncryption {
         }
     }
 
+    /** Method that obtains the special hardcoded key to encrypt our key file
+     *
+     * @return                  returns special key
+     */
     public static String getSpecialKey(){
         return generatedKey;
     }
