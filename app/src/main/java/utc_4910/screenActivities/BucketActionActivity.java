@@ -73,8 +73,6 @@ public class BucketActionActivity extends ActionBarActivity {
      *
      */
     public void runButtonListeners(){
-
-
         /** This AdapterView listener runs when the spinner on our screen is selected.
          * This method just resets the active bucket to whatever bucket the spinner selected.
          *
