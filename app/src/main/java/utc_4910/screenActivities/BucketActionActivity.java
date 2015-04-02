@@ -88,7 +88,6 @@ public class BucketActionActivity extends ActionBarActivity {
             public void onNothingSelected(AdapterView<?> parentView) {
                 // your code here
             }
-
         });
 
 
@@ -224,12 +223,10 @@ public class BucketActionActivity extends ActionBarActivity {
                                 Toast.LENGTH_LONG).show();
                     }
 
-
                     ExecutorService executeT3 = Executors.newFixedThreadPool(5);
                     executeT3.execute(r);
                     executeT3.shutdownNow();
                     while (!executeT3.isTerminated()) {};
-
 
                     //Update the spinner list accordingly.
                     updateBucketList(listBucketRunnable, mHandler, spinner);
