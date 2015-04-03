@@ -48,8 +48,8 @@ public class CreateBucketActivity extends ActionBarActivity {
 
         ArrayList<String> encryptionPolicies = new ArrayList<String>();
         encryptionPolicies.add("No Encryption");
-        encryptionPolicies.add("Some Encryption");
-        encryptionPolicies.add("Full Encryption");
+        encryptionPolicies.add("Strong Encryption");
+        encryptionPolicies.add("Very Strong Encryption");
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(CreateBucketActivity.this,
                 android.R.layout.simple_spinner_item, encryptionPolicies);
         encryptionPolicySpinner.setAdapter(adapter);
@@ -77,10 +77,10 @@ public class CreateBucketActivity extends ActionBarActivity {
                 if (selectedItem.equals("No Encryption")){
                     bucketName = "non-" + userName + "-" + bucketName;
                     bucketManager.setBucketName(bucketName);
-                }else if (selectedItem.equals( "Some Encryption")){
+                }else if (selectedItem.equals( "Strong Encryption")){
                     bucketName = "som-" + userName + "-" + bucketName;
                     bucketManager.setBucketName(bucketName);
-                }else if (selectedItem.equals("Full Encryption")){
+                }else if (selectedItem.equals("Very Strong Encryption")){
                     bucketName = "all-" + userName + "-" + bucketName;
                     bucketManager.setBucketName(bucketName);
                 }
@@ -134,10 +134,10 @@ public class CreateBucketActivity extends ActionBarActivity {
                     if (selectedItem.equals("No Encryption")) {
                         bucketName = "non-" + userName + "-" + bucketName;
                         bucketManager.setBucketName(bucketName);
-                    } else if (selectedItem.equals("Some Encryption")) {
+                    } else if (selectedItem.equals("Strong Encryption")) {
                         bucketName = "som-" + userName + "-" + bucketName;
                         bucketManager.setBucketName(bucketName);
-                    } else if (selectedItem.equals("Full Encryption")) {
+                    } else if (selectedItem.equals("Very Strong Encryption")) {
                         bucketName = "all-" + userName + "-" + bucketName;
                         bucketManager.setBucketName(bucketName);
                     }
