@@ -25,7 +25,7 @@ import utc_4910.photoencryptionincloud.R;
  * Created by Matthew Jallouk on 2/27/2015.
  */
 public class CreateBucketActivity extends ActionBarActivity {
-
+//comment
     private EditText bucketNameEdit = null;
     private Spinner encryptionPolicySpinner = null;
     private Button createBucketButton = null;
