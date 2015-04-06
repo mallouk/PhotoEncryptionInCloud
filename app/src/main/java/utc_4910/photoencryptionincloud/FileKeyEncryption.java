@@ -50,28 +50,37 @@ public class FileKeyEncryption {
 
     /** Method that actually does the encryption/decryption and writes it the appropriate files.
      *
-     * @param cipherMode
-     * @param key
-     * @param inputFile
-     * @param outputFile
+     * @param cipherMode                cipher mode, which algorithm will we use (AES in this case);
+     *                                  as well as if we're decrypting or encrypting.
+     * @param key                       actual key used for encryption/decryption.
+     * @param inputFile                 file that will be encrypted/decrypted.
+     * @param outputFile                the encrypted or decrypted file
      * @throws Exception
      */
     private static void doCrypto(int cipherMode, String key, File inputFile,
                                  File outputFile) throws Exception {
         try {
+            //Generate the particular key and cipher that we will use for the
+            //encryption or decryption.
             Key secretKey = new SecretKeySpec(key.getBytes(), ALGORITHM);
             Cipher cipher = Cipher.getInstance(TRANSFORMATION);
             cipher.init(cipherMode, secretKey);
 
+            //Generate the FileInput Stream to get the encrypted/decrypted
+            //contents of the file to either respectively decrypt/encrypt.
             FileInputStream inputStream = new FileInputStream(inputFile);
             byte[] inputBytes = new byte[(int) inputFile.length()];
             inputStream.read(inputBytes);
 
+            //New encrypted/decrypted bytes to be written to the file in order to be secured
+            //(if encrypted) or read by the program (if decrypted).
             byte[] outputBytes = cipher.doFinal(inputBytes);
 
+            //Write these new bytes to the file.
             FileOutputStream outputStream = new FileOutputStream(outputFile);
             outputStream.write(outputBytes);
 
+            //Close the streams.
             inputStream.close();
             outputStream.close();
 
