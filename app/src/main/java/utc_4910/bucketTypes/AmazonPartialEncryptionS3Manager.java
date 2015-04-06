@@ -103,6 +103,12 @@ public class AmazonPartialEncryptionS3Manager implements Serializable {
         amazonS3Client.deleteObject(bucketName, fileName);
     }
 
+    /** Method that calls the particular bucket we have selected and obtains all of the
+     *  photos from that bucket.
+     *
+     * @param bucketName        name of the bucket of which the contents we are spilling.
+     * @return                  returns a list of photos to be displayed in a list.
+     */
     public ArrayList<String> listObjectsInBucket(String bucketName){
         ArrayList<String> fileNamesList = new ArrayList<String>();
         for(S3ObjectSummary file : amazonS3Client.listObjects(bucketName).getObjectSummaries()) {
