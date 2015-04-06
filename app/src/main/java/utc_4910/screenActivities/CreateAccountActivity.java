@@ -444,7 +444,6 @@ public class CreateAccountActivity extends ActionBarActivity {
                 sb.append(String.format("%02x", b & 0xff));
             }
 
-
         } catch (Exception e) {
             e.printStackTrace();
         }
