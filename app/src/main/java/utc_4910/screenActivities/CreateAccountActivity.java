@@ -337,11 +337,24 @@ public class CreateAccountActivity extends ActionBarActivity {
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public class PasswordButtonListener implements View.OnTouchListener{
 
+        /* Constructor that does pretty much nothing. Why is this here again?
+         *
+         */
         public PasswordButtonListener(){}
 
+        /** Method is executed when a user's finger touches the screen. The specific
+         *  logic executed is based upon what sort of gesture occurred.
+         *
+         * @param v                     object of which is this run on (main TableLayout
+         *                              in this case).
+         * @param event                 event to be analyzed.
+         * @return                      returns a true/false to determine if this
+         *                              event was handled (always will return true).
+         */
         @Override
         public boolean onTouch(View v, MotionEvent event) {
             if (passSet) {
+                //Highlight the tapped button and add it to our password gesture.
                 if (event.getAction() == MotionEvent.ACTION_DOWN) {
                     float x = event.getX();
                     float y = event.getY();
@@ -364,6 +377,8 @@ public class CreateAccountActivity extends ActionBarActivity {
                         }
                     }
                     return true;
+                    //As we move our finger across, we pick up more buttns and add them to our queue of
+                    //tapped buttons.
                 } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
                     float x = event.getX();
                     float y = event.getY();
@@ -389,6 +404,10 @@ public class CreateAccountActivity extends ActionBarActivity {
                     gridLayout.getLocationOnScreen(posXY);
 
                     return true;
+
+                    //Finally, once we lift our finger, add the last button that we're on to our gestured
+                    //list of buttons. We lock this feature so you can't add any more buttons withour reseting
+                    //the state of the machine.
                 } else if (event.getAction() == MotionEvent.ACTION_UP) {
                     passSet = false;
                     Log.d("Done!", password + "");
@@ -397,19 +416,29 @@ public class CreateAccountActivity extends ActionBarActivity {
                 } else {
                     return false;
                 }
+
+                //No other types of events are handled.
             }else{
                 return false;
             }
         }
     }
 
+    /** Method that hashes whatever string it takes in. The hashing algorithm is SHA-1.
+     *
+     * @param words                 string to be hashed, typically is a username/password.
+     * @return                      returns an SHA-1, hash.
+     */
     public String hashString(String words){
         StringBuffer sb = null;
         try {
+            //Define the algorithm to use.
             MessageDigest digest = MessageDigest.getInstance("SHA-1");
             digest.reset();
+            //Translate bytes to unicode.
             digest.update(words.getBytes("UTF-8"));
 
+            //Chain them together and shift them to get a hash.
             sb = new StringBuffer();
             for (byte b : digest.digest()) {
                 sb.append(String.format("%02x", b & 0xff));
@@ -419,6 +448,7 @@ public class CreateAccountActivity extends ActionBarActivity {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        //Return a string version of the hash.
         return sb.toString();
     }
 }
