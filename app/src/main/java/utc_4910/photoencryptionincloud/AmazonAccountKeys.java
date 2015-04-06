@@ -22,7 +22,7 @@ public class AmazonAccountKeys {
     public static String getPublicKey(){
         return publicKey;
     }
-//comment
+
     /** Method that returns the hardcoded private key to the AWS account.
      *
      * @return                      returns private key.
