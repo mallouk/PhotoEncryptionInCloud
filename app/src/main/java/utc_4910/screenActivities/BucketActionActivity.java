@@ -46,6 +46,7 @@ public class BucketActionActivity extends ActionBarActivity {
      * @param savedInstanceState        state of the previous instance being saved.
      */
     public void onCreate(Bundle savedInstanceState) {
+        //Set up initial properities of our main logged in activity.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.bucket_action_activity);
         userName = (String)getIntent().getSerializableExtra("UserName");
@@ -80,6 +81,7 @@ public class BucketActionActivity extends ActionBarActivity {
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
+                //Redefine the current selected bucket as we change the current active button.
                 String selectedItem = spinner.getSelectedItem().toString();
                 bucketManager.setBucketName(selectedItem);
             }
@@ -99,6 +101,7 @@ public class BucketActionActivity extends ActionBarActivity {
          */
         listObjectsButton.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v) {
+                //If we have a bucket selected, then we display its contents in a new activity.
                 if (spinner.getCount() != 0) {
                     Intent i = new Intent();
                     //Pass the active bucket name to the next activity.
@@ -107,6 +110,7 @@ public class BucketActionActivity extends ActionBarActivity {
                     //Launch the next activity.
                     startActivity(i);
                 }else{
+                    //If new active bucket exists, through this error.
                     Toast.makeText(getApplicationContext(), "You don't have any buckets to look at. Please create one.",
                             Toast.LENGTH_LONG).show();
                 }
@@ -122,10 +126,12 @@ public class BucketActionActivity extends ActionBarActivity {
         uploadPhotoButton.setOnClickListener(new Button.OnClickListener(){
             @Override
             public void onClick(View v){
-                //Encapsulate the gallery call in a runnable thread. We do this because many calls
-                //to the devices systems cannot run on the main user thread and thusly have to be
-                //called via secondary threads.
+                /** Encapsulate the gallery call in a runnable thread. We do this because many calls
+                 * to the devices systems cannot run on the main user thread and therefore have to be
+                 * called via secondary threads.
+                */
 
+                //Block of code to be called (and encapsulated in a thread).
                 Runnable r = new Runnable() {
                     public void run() {
                         Intent imagePicker = new Intent(Intent.ACTION_PICK,
@@ -135,10 +141,12 @@ public class BucketActionActivity extends ActionBarActivity {
                     }
                 };
 
+                //If we have an active bucket selected, open the gallery to upload a photo.
                 if (spinner.getCount() != 0) {
                     Thread t1 = new Thread(r);
                     t1.start();
                 }else{
+                    //If we dont have an active bucket selected, throw this error.
                     Toast.makeText(getApplicationContext(), "You don't have any buckets to upload a file to. Please create one.",
                             Toast.LENGTH_LONG).show();
                 }
@@ -164,6 +172,8 @@ public class BucketActionActivity extends ActionBarActivity {
                         startActivity(i);
                     }
                 };
+                //Execute various threads from a pool. Wait until this thread is finished
+                //to continue execution.
                 ExecutorService executeT1 = Executors.newFixedThreadPool(1);
                 executeT1.execute(r);
                 executeT1.shutdown();
@@ -184,22 +194,22 @@ public class BucketActionActivity extends ActionBarActivity {
         deleteBucketButton.setOnClickListener(new Button.OnClickListener() {
             @Override
             public void onClick(View v) {
+                //If we have a selected bucket, execute this code. Otherwise, throw an error.
                 if (spinner.getCount() != 0) {
                     final String bucketName = spinner.getSelectedItem().toString();
                     final BucketManager newBucket = new BucketManager(bucketName);
 
                     //Threads are dispatched to check if the bucket actually exists and if the bucket
-                    //is empty or not.
+                    //is exists or not.
                     final BucketExistsRunnable bucketExistsRunnable = new BucketExistsRunnable(newBucket);
                     final IsBucketEmptyRunnable isBucketEmptyRunnable = new IsBucketEmptyRunnable(newBucket);
                     ExecutorService execute = Executors.newFixedThreadPool(1);
                     ExecutorService executeT2 = Executors.newFixedThreadPool(5);
-
                     execute.execute(bucketExistsRunnable);
                     execute.shutdown();
                     while (!execute.isTerminated()) {};
 
-
+                    //Thread is executed to see if it is empty or not.
                     executeT2.execute(isBucketEmptyRunnable);
                     executeT2.shutdown();
                     while (!executeT2.isTerminated()) {};
@@ -219,10 +229,11 @@ public class BucketActionActivity extends ActionBarActivity {
                         Toast.makeText(getApplicationContext(), "'" + bucketName + "' bucket destroyed!",
                                 Toast.LENGTH_LONG).show();
                     } else if (!isBucketEmptyRunnable.isBucketEmpty()) {
-                        Toast.makeText(getApplicationContext(), "You can't delete a bucket that has stuff in it.",
+                        Toast.makeText(getApplicationContext(), "You can't delete a bucket that has photos in it.",
                                 Toast.LENGTH_LONG).show();
                     }
 
+                    //Execute thread to delete a bucket.
                     ExecutorService executeT3 = Executors.newFixedThreadPool(5);
                     executeT3.execute(r);
                     executeT3.shutdownNow();
@@ -231,6 +242,7 @@ public class BucketActionActivity extends ActionBarActivity {
                     //Update the spinner list accordingly.
                     updateBucketList(listBucketRunnable, mHandler, spinner);
                 }else{
+                    //If we have no currently selected bucket, throw this error.
                     Toast.makeText(getApplicationContext(), "You don't have any buckets to destroy. Please create one.",
                             Toast.LENGTH_LONG).show();
                 }
@@ -446,7 +458,7 @@ public class BucketActionActivity extends ActionBarActivity {
     }
 
     /** Android Studio auto generated method calls.
-     *
+     * We tweaked this actually to add in a "Log out feature"
      * @param menu
      * @return
      */
@@ -469,7 +481,7 @@ public class BucketActionActivity extends ActionBarActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         int id = item.getItemId();
 
-        //noinspection SimplifiableIfStatement
+        //Perform action if we hit "Logout".
         if (id == R.id.action_settings) {
             Intent i = new Intent();
             i.setClass(BucketActionActivity.this, MainActivity.class);
