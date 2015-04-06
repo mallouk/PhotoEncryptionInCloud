@@ -41,6 +41,7 @@ import utc_4910.photoencryptionincloud.R;
  */
 public class CreateAccountActivity extends ActionBarActivity {
 
+    //Define instance variables.
     private ImageView[] gestureButtons = new ImageView[16];
     private TableLayout gridLayout;
     private ArrayList<String> password = new ArrayList<String>();
@@ -55,10 +56,14 @@ public class CreateAccountActivity extends ActionBarActivity {
     private int usernameCollision = 0;
     private int usernameDefault = 0;
 
+    /** Method that sets up main properities of the screen.
+     *
+     * @param savedInstanceState
+     */
     public void onCreate(Bundle savedInstanceState) {
+        //Set up main screen elemental properities.
         super.onCreate(savedInstanceState);
         setTitle("Create Account Screen");
-
         setContentView(R.layout.gesture_activity);
         gridLayout = (TableLayout)findViewById(R.id.gestureGrid);
         parentLayout = (RelativeLayout)findViewById(R.id.relativeLayout);
@@ -85,13 +90,20 @@ public class CreateAccountActivity extends ActionBarActivity {
         gestureButtons[14] = (ImageView)findViewById(R.id.imageView15);
         gestureButtons[15] = (ImageView)findViewById(R.id.imageView16);
 
+        //Listen for actions on buttons.
         this.runButtonListeners();
     }
 
+    /** Method that holds what events and actions to perform per each event listener.
+     *
+     */
     @TargetApi(Build.VERSION_CODES.ICE_CREAM_SANDWICH)
     public void runButtonListeners() {
+
+        //Set up listener to deal with gesture signals.
         gridLayout.setOnTouchListener(new PasswordButtonListener());
 
+        //Take away keyboard when you click on any other object except the edit text object.
         parentLayout.setOnClickListener(new RelativeLayout.OnClickListener(){
             public void onClick(View v){
                 Activity activity = CreateAccountActivity.this;
@@ -101,6 +113,11 @@ public class CreateAccountActivity extends ActionBarActivity {
             }
         });
 
+        /** This event block executes when the user clicks the editText object to enter our username.
+         *  Basically, all this event does is, clear the default place holder username.
+         *  This event will only execute once, it performs nothing post, additional clicks.
+         *
+         */
         userName.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v){
                 if (usernameDefault == 0){
@@ -112,21 +129,30 @@ public class CreateAccountActivity extends ActionBarActivity {
             }
         });
 
+        /** This event block executes when the user taps the confirm account info button.
+         *  This button checks to see if the current username exists, throws an exception
+         *  if it does exists, writes the username/password pair (if it doesn't exist)
+         *  to our hidden file, and encrypts said file. The user is also prompted to redraw
+         *  the password to confirm.
+         */
         confirmButton.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v) {
                 usernameCollision = 0;
+                //Obtain file if it exists and read it to determine if the username exists already.
                 File folder = new File(Environment.getExternalStorageDirectory() + "/.AWS");
                 folder.mkdirs();
                 String fileName = AmazonAccountKeys.getKeyFileName();
                 String usernameHash = userName.getText().toString().trim().toLowerCase();
                 usernameHash = usernameHash.replace(" ", "");
                 try {
+                    //Scan file, decrypt it.
                     File file = new File(folder + fileName);
                     Scanner scan = null;
                     if (file.exists()) {
                         FileKeyEncryption.decrypt(FileKeyEncryption.getSpecialKey(), file, file);
                         scan = new Scanner(file);
                     }
+                    //Read decrypted file to determine if our username already exists.
                     String record = "";
                     if (file.exists()) {
                         while (scan.hasNextLine()) {
@@ -134,6 +160,7 @@ public class CreateAccountActivity extends ActionBarActivity {
                             String[] tokens = record.split(":::");
                             String tokenUserName = tokens[0];
                             String usernameHashString = hashString(usernameHash);
+                            //If username exists, set our flag.
                             if (tokenUserName.equals(usernameHashString)) {
                                 usernameCollision = 1;
                             }
@@ -143,6 +170,7 @@ public class CreateAccountActivity extends ActionBarActivity {
                     e.printStackTrace();
                 }
 
+                //Sanitize the input of our username
                 String badSymbols = "~`!@#$%^&*()_+=,<>?/;:'[{}]";
                 boolean badSymbolChecker = ((usernameHash.contains(badSymbols.substring(0, 1))) ||
                         (usernameHash.contains(badSymbols.substring(1, 2))) ||
@@ -171,11 +199,14 @@ public class CreateAccountActivity extends ActionBarActivity {
                         (usernameHash.contains(badSymbols.substring(25, 26))) ||
                         (usernameHash.contains(badSymbols.substring(26, 27))) ||
                         (usernameHash.contains("\"")));
+                //Throw errors if the user enters a bad symbol. Otherwise,
+                //prompt the user to confirm their gesture password.
                 if (!badSymbolChecker) {
                     if (usernameCollision == 0) {
                         textView4.setText("Redraw your pattern to confirm.");
                         if (confirmSwitcher == 1 && !password.isEmpty()) {
                             confirmSwitcher = 2;
+                            //Reset visual buttons so user can confirm password.
                             for (int i = 0; i < gestureButtons.length; i++) {
                                 gestureButtons[i].setImageResource(R.drawable.gesture_not_pressed);
                             }
@@ -183,10 +214,12 @@ public class CreateAccountActivity extends ActionBarActivity {
                             confirmPass = (ArrayList<String>) (password.clone());
                             password = new ArrayList<String>();
 
+                            //Confirmed password, so we compile the hashed username/password
+                            //generate the keys, write to file, and encrypt the key file.
                         } else if (confirmSwitcher == 2 && password.equals(confirmPass) && !password.isEmpty()) {
                             File file = new File(folder + fileName);
                             try {
-
+                                //Generate our eight user keys.
                                 KeyGenerator generator = KeyGenerator.getInstance("AES");
                                 generator.init(256, new SecureRandom());
                                 SSECustomerKey sseKey1 = new SSECustomerKey(generator.generateKey());
@@ -220,8 +253,8 @@ public class CreateAccountActivity extends ActionBarActivity {
                                         totalFile += record + "\n";
                                     }
                                 }
+                                //Write old accounts on there and include the freshly new account.
                                 PrintWriter printWriter = new PrintWriter(folder + fileName);
-
                                 printWriter.print(totalFile);
 
                                 String usernameHashString = hashString(usernameHash);
@@ -231,20 +264,26 @@ public class CreateAccountActivity extends ActionBarActivity {
                                         ":::" + key8);
                                 printWriter.close();
 
+                                //Re-encrypt the key file.
                                 FileKeyEncryption.encrypt(FileKeyEncryption.getSpecialKey(), file, file);
                             } catch (Exception e) {
                                 e.printStackTrace();
                             }
 
+                            //Switch back to main screen now that we're done.
                             Intent i = new Intent();
                             i.setClass(CreateAccountActivity.this, MainActivity.class);
                             //Launch the next activity.
                             finish();
                             Toast.makeText(getApplicationContext(), "Account has been created. You can now login!",
                                     Toast.LENGTH_LONG).show();
+
+                            //Throw error if password is empty.
                         } else if (password.isEmpty()) {
                             textView4.setText("You can't have an empty pattern\n           password! Try again!");
                             passSet = true;
+
+                            //Throw error if password confirmation doesn't match original.
                         } else {
                             //Passwords don't match.
                             textView4.setText("         Your confirmed password\n     doesn't match the original one." +
@@ -257,6 +296,8 @@ public class CreateAccountActivity extends ActionBarActivity {
                             confirmPass = new ArrayList<String>();
                             password = new ArrayList<String>();
                         }
+
+                        //Throw error if the username already exists.
                     } else {
                         textView4.setText("             Username already exists.\n       Please choose another username" +
                                 "\n              and draw your pattern!");
@@ -267,12 +308,18 @@ public class CreateAccountActivity extends ActionBarActivity {
                         password = new ArrayList<String>();
 
                     }
+
+                    //Throw error if we have bad symbols in our username.
                 }else{
                     textView4.setText("   Usernames can only contain\n  letters and numbers. Try again." + usernameHash);
                 }
             }
         });
 
+        /** This event occurs when we tap the redraw button on the screen. It just clears all of the resets
+         *  the screen back to original state prior to any username/password pairs being entered.
+         *
+         */
         redrawButton.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v){
                 for (int i = 0; i < gestureButtons.length; i++){
@@ -284,6 +331,9 @@ public class CreateAccountActivity extends ActionBarActivity {
         });
     }
 
+    /** Inner class that handles the gestures taken in by the user drawing their password.
+     *
+     */
     @TargetApi(Build.VERSION_CODES.HONEYCOMB)
     public class PasswordButtonListener implements View.OnTouchListener{
 
