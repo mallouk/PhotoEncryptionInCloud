@@ -32,7 +32,7 @@ public class CreateBucketActivity extends ActionBarActivity {
     private BucketManager bucketManager = new BucketManager("capstone");
     private RelativeLayout relativeLayout = null;
     private String userName;
-
+//comment
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
