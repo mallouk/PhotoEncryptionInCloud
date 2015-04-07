@@ -26,26 +26,33 @@ import utc_4910.photoencryptionincloud.R;
  */
 public class CreateBucketActivity extends ActionBarActivity {
 
+    //Define instance variables.
     private EditText bucketNameEdit = null;
     private Spinner encryptionPolicySpinner = null;
     private Button createBucketButton = null;
     private BucketManager bucketManager = new BucketManager("capstone");
     private RelativeLayout relativeLayout = null;
     private String userName;
-//comment
+
+    /** Method that is run at the start of this activity being called
+     *
+     * @param savedInstanceState        state of the previous instance being saved.
+     */
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+        //Initialize main properities of screen.
         super.onCreate(savedInstanceState);
         setContentView(R.layout.create_bucket_activity);
         setTitle("Create Bucket Screen");
 
+        //Obtain passed data and initialize private variables.
         userName = (String)getIntent().getSerializableExtra("UserName");
-
         bucketNameEdit = (EditText)findViewById(R.id.bucketNameEdit);
         encryptionPolicySpinner = (Spinner)findViewById(R.id.encryptionPolicySpinner);
         createBucketButton = (Button)findViewById(R.id.createBucket);
         relativeLayout = (RelativeLayout)findViewById(R.id.relativeLayout);
 
+        //Set encryption policies
         ArrayList<String> encryptionPolicies = new ArrayList<String>();
         encryptionPolicies.add("No Encryption");
         encryptionPolicies.add("Strong Encryption");
@@ -55,11 +62,21 @@ public class CreateBucketActivity extends ActionBarActivity {
         encryptionPolicySpinner.setAdapter(adapter);
 
         bucketManager.setBucketName(bucketNameEdit.getText().toString());
+
+        //Listen for events.
         this.runButtonListeners();
     }
 
+    /** Method that holds all of the event detections. When a button is clicked this method
+     * holds and runs a series of commands based upon which button was clicked.
+     *
+     */
     public void runButtonListeners(){
 
+        /** Event listener that clears away the keyboard when the user taps any other region of the screen,
+         *  with the exception of the editText field.
+         *
+         */
         relativeLayout.setOnClickListener(new RelativeLayout.OnClickListener(){
             public void onClick(View v){
                 Activity activity = CreateBucketActivity.this;
@@ -68,6 +85,10 @@ public class CreateBucketActivity extends ActionBarActivity {
             }
         });
 
+        /** Event listener that listens for when the spinner is tapped. It modifies the current selected
+         *  encryption policy.
+         *
+         */
         encryptionPolicySpinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
@@ -92,8 +113,12 @@ public class CreateBucketActivity extends ActionBarActivity {
             }
         });
 
+        /** Event listener that occurs when the user taps the "Create Bucket" button.
+         *  This listener throws an error if we have ill-formed bucket names.
+         */
         createBucketButton.setOnClickListener(new Button.OnClickListener(){
             public void onClick(View v){
+                //Check for illegal bucket names.
                 String badSymbols = "~`!@#$%^&*()_+=,<>?/;:'[{}]";
                 String bucketName = bucketNameEdit.getText().toString().toLowerCase().trim();
                 String selectedItem = encryptionPolicySpinner.getSelectedItem().toString();
@@ -130,6 +155,8 @@ public class CreateBucketActivity extends ActionBarActivity {
                              (bucketName.contains("\""))) {
                     Toast.makeText(getApplicationContext(), "Sorry! A bucket can't contain symbols (except for periods).",
                             Toast.LENGTH_LONG).show();
+
+                    //Otherwise, construct the appropriate bucket.
                 }else{
                     if (selectedItem.equals("No Encryption")) {
                         bucketName = "non-" + userName + "-" + bucketName;
@@ -142,6 +169,7 @@ public class CreateBucketActivity extends ActionBarActivity {
                         bucketManager.setBucketName(bucketName);
                     }
 
+                    //Call our create bucket via a thread.
                     Runnable r = new Runnable() {
                         public void run() {
                             bucketManager.createBucket();
@@ -152,6 +180,7 @@ public class CreateBucketActivity extends ActionBarActivity {
                     executeT1.shutdown();
                     while (!executeT1.isTerminated()) {};
 
+                    //Return message and transfer back to original screen.
                     Toast.makeText(getApplicationContext(), "'" + bucketManager.getBucketName() + "' bucket created!",
                             Toast.LENGTH_LONG).show();
                     Intent i = new Intent();

@@ -34,6 +34,7 @@ import utc_4910.photoencryptionincloud.R;
  */
 public class LoginActivity extends ActionBarActivity {
 
+    //Define private variables.
     private ImageView[] gestureButtons = new ImageView[16];
     private TableLayout gridLayout;
     private ArrayList<String> password = new ArrayList<String>();
