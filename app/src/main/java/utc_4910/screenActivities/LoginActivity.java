@@ -50,7 +50,7 @@ public class LoginActivity extends ActionBarActivity {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setTitle("Login Account Screen");
-
+//comment
 
         setContentView(R.layout.gesture_activity);
         gridLayout = (TableLayout)findViewById(R.id.gestureGrid);
