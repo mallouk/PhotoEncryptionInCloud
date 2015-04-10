@@ -377,7 +377,7 @@ public class CreateAccountActivity extends ActionBarActivity {
                         }
                     }
                     return true;
-                    //As we move our finger across, we pick up more buttns and add them to our queue of
+                    //As we move our finger across, we pick up more buttons and add them to our queue of
                     //tapped buttons.
                 } else if (event.getAction() == MotionEvent.ACTION_MOVE) {
                     float x = event.getX();
