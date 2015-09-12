@@ -70,6 +70,8 @@ public class AmazonPartialEncryptionS3Manager implements Serializable {
 
         //Read the encrypted keys from the file stored on the device for the particular user.
         //We then use those keys to encrypt the photo we send up to the cloud.
+        //The PutObjectRequest function encapsulates the SSL connection when transferring the file
+        //to the server where it will be encrypted.
         try {
             parseFileAndGenerateKeys();
 
@@ -126,6 +128,8 @@ public class AmazonPartialEncryptionS3Manager implements Serializable {
      */
     public S3Object getObjectInBucket(String bucketName, String file){
         S3Object s3Object = null;
+        //The GetObjectRequest function encapsulates the SSL connection when transferring the file
+        //from the server where it is decrypted.
         try {
             parseFileAndGenerateKeys();
             GetObjectRequest getObjectRequest = new GetObjectRequest(bucketName, file)

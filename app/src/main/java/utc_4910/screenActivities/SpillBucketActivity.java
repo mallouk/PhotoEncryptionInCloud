@@ -294,7 +294,6 @@ public class SpillBucketActivity extends ActionBarActivity {
             spilledBucketList.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
             spilledBucketList.setAdapter(list);
             numItemsInBucket = filesInBucket.size();
-
         }
     }
 }

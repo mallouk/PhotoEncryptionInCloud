@@ -72,7 +72,8 @@ public class AmazonFullEncryptionS3Manager {
         try {
             parseFileAndGenerateKeys();
 
-            //Place request
+            //The PutObjectRequest function encapsulates the SSL connection when transferring the file
+            //to the server where it will be encrypted.
             PutObjectRequest putObjectRequest = new PutObjectRequest(bucketName, file.getName(), file)
                     .withSSECustomerKey(sseKey[0]).withSSECustomerKey(sseKey[1])
                     .withSSECustomerKey(sseKey[2]).withSSECustomerKey(sseKey[3])
@@ -136,6 +137,8 @@ public class AmazonFullEncryptionS3Manager {
         try {
             parseFileAndGenerateKeys();
 
+            //The GetObjectRequest function encapsulates the SSL connection when transferring the file
+            //from the server where it is decrypted.
             GetObjectRequest getObjectRequest = new GetObjectRequest(bucketName, file)
                     .withSSECustomerKey(sseKey[0]).withSSECustomerKey(sseKey[1])
                     .withSSECustomerKey(sseKey[2]).withSSECustomerKey(sseKey[3])
