@@ -186,5 +186,4 @@ public class AmazonFullEncryptionS3Manager {
             sseKey[i] = new SSECustomerKey(keyStrings[i]);
         }
     }
-
 }
